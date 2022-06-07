@@ -2,40 +2,36 @@ const {
     Lecturer
 } = require('../models/db');
 
-// List Lecturers
 const lecturersList = async (req, res) => {
-    const lecturersList = await Lecturer.findAll();
-    if (lecturersList == null)
+    const lecturerList = await Lecturer.findAll();
+    if (lecturerList == null)
         res.status(500).json({
             'message': 'INTERNAL SERVER ERROR!'
         });
-    else if (!lecturersList.length)
+    else if (!lecturerList.length)
         res.status(404).json({
             'message': 'NO LECTURER FOUND!'
         });
     else
-        res.status(200).json(lecturersList);
+        res.status(200).json(lecturerList);
 };
-// Read a Lecturer
 const lecturerReadOne = async (req, res) => {
     const lecturerId = req.params.id;
-    const lecturer = await Lecturer.findOne({
-        where: {
-            id: lecturerId
-        }
-    });
-    if (lecturer == null)
-        res.status(500).json({
-            'message': 'INTERNAL SERVER ERROR!'
-        })
-    else if (!lecturer)
+    let lecturer;
+    try {
+        lecturer = await Lecturer.findOne({
+            where: {
+                id: lecturerId
+            }
+        });
+    } catch (err) {
         res.status(404).json({
             'message': 'LECTURER NOT FOUND!'
         });
-    else
-        res.status(200).json(lecturer);
+        return;
+    }
+    res.status(200).json(lecturer);
 };
-// Create a Lecturer
 const lecturerCreateOne = async (req, res) => {
     const lecturer = {
         firstName: req.body.firstName,
@@ -46,7 +42,6 @@ const lecturerCreateOne = async (req, res) => {
     try {
         await Lecturer.create(lecturer);
     } catch (err) {
-        console.log(err);
         res.status(500).json({
             'message': 'INTERNAL SERVER ERROR!'
         });
@@ -54,27 +49,21 @@ const lecturerCreateOne = async (req, res) => {
     }
     res.status(201).json(lecturer);
 };
-// Update a Lecturer
 const lecturerUpdateOne = async (req, res) => {
     const lecturerId = req.params.id;
-    const lecturer = await Lecturer.findOne({
-        where: {
-            id: lecturerId
-        }
-    });
-
-    if (lecturer == null) {
-        res.status(500).json({
-            'message': 'INTERNAL SERVER ERROR!'
+    let lecturer;
+    try {
+        lecturer = await Lecturer.findOne({
+            where: {
+                id: lecturerId
+            }
         });
-        return;
-    } else if (!lecturer) {
+    } catch (err) {
         res.status(404).json({
             'message': 'LECTURER NOT FOUND!'
         });
         return;
     }
-
     lecturer.firstName = req.body.firstName;
     lecturer.lastName = req.body.lastName;
     lecturer.title = req.body.title;
@@ -89,27 +78,21 @@ const lecturerUpdateOne = async (req, res) => {
             res.status(200).json(lecturer);
     });
 };
-// Delete a Lecturer
 const lecturerDeleteOne = async (req, res) => {
     const lecturerId = req.params.id;
-    const lecturer = await Lecturer.findOne({
-        where: {
-            id: lecturerId
-        }
-    });
-
-    if (lecturer == null) {
-        res.status(500).json({
-            'message': 'INTERNAL SERVER ERROR!'
+    let lecturer;
+    try {
+        lecturer = await Lecturer.findOne({
+            where: {
+                id: lecturerId
+            }
         });
-        return;
-    } else if (!lecturer) {
+    } catch (err) {
         res.status(404).json({
             'message': 'LECTURER NOT FOUND!'
         });
         return;
     }
-
     lecturer.destroy().then((response, err) => {
         if (err)
             res.status(500).json({

@@ -3,7 +3,9 @@ const router = express.Router();
 
 const institutionCTRL = require('../controllers/Institutions');
 const studentCTRL = require('../controllers/Students');
-const LecturerCTRL = require('../controllers/Lecturer');
+const LecturerCTRL = require('../controllers/Lecturers');
+const ProgramCTRL = require('../controllers/Programs');
+
 // Institution CRUD API
 router.get('/institutions', institutionCTRL.institutionsList);
 router.get('/institution/:id',institutionCTRL.institutionReadOne);
@@ -24,5 +26,12 @@ router.get('/lecturer/:id',LecturerCTRL.lecturerReadOne);
 router.post('/lecturer',LecturerCTRL.lecturerCreateOne);
 router.put('/lecturer/:id',LecturerCTRL.lecturerUpdateOne);
 router.delete('/lecturer/:id',LecturerCTRL.lecturerDeleteOne);
+
+// Program CRUD API
+router.get('/programs',ProgramCTRL.programsList);
+router.get('/program/:id',ProgramCTRL.programReadOne);
+router.post('/program',ProgramCTRL.programCreateOne);
+router.put('/program/:id',ProgramCTRL.programUpdateOne);
+router.delete('/program/:id',ProgramCTRL.programDeleteOne);
 
 module.exports = router;

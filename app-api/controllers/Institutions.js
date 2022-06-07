@@ -2,59 +2,63 @@ const {
     Institution
 } = require('../models/db');
 
-// Read institutions List
 const institutionsList = async (req, res) => {
-    const institutionsList = await Institution.findAll();
-    console.log("All institutes:", JSON.stringify(institutionsList, null, 2));
-    if (institutionsList == null)
+    const institutionList = await Institution.findAll();
+    console.log("All institutes:", JSON.stringify(institutionList, null, 2));
+    if (institutionList == null)
         res.status(500).json({
             'message': 'INTERNAL SERVER ERROR'
         });
-    else if (institutionsList.length)
-        res.status(200).json(institutionsList);
+    else if (institutionList.length)
+        res.status(200).json(institutionList);
     else
         res.status(404).json({
             'message': 'NO INSTITUTIONS FOUND!'
         });
 };
-// Read an institution
 const institutionReadOne = async (req, res) => {
     const institution_id = req.params.id;
-    const institute = await Institution.findOne({
-        where: {
-            id: institution_id
-        }
-    });
-    if (institute)
-        res.status(200).json(institute);
-    else
+    let institute;
+    try {
+        institute = await Institution.findOne({
+            where: {
+                id: institution_id
+            }
+        });
+    } catch (err) {
         res.status(404).json({
             'message': 'INSTITUTE NOT FOUND!'
         });
+        return;
+    }
+    res.status(200).json(institute);
 };
-// Create an institute
 const institutionCreateOne = async (req, res) => {
-    let instituteInstance = {
+    let institute = {
         name: req.body.name
     };
-    const institute = await Institution.create(instituteInstance);
-    res.status(201).json(institute.toJSON());
-};
-// Update an institute
-const institutionUpdateOne = async (req, res) => {
-    const institution_id = req.params.id;
-    const institute = await Institution.findOne({
-        where: {
-            id: institution_id
-        }
-    });
-    if (institute == null) {
+    try {
+        await Institution.create(instituteInstance);
+    } catch (err) {
         res.status(500).json({
             'message': 'INTERNAL SERVER ERROR!'
         });
-    } else if (!institute) {
+        return;
+    }
+    res.status(201).json(institute);
+};
+const institutionUpdateOne = async (req, res) => {
+    const institution_id = req.params.id;
+    let institute;
+    try {
+        institute = await Institution.findOne({
+            where: {
+                id: institution_id
+            }
+        });
+    } catch (err) {
         res.status(404).json({
-            'message': 'INSTITUTION NOT FOUND!'
+            'message': 'INSTITUTE NOT FOUND!'
         });
         return;
     }
@@ -66,17 +70,18 @@ const institutionUpdateOne = async (req, res) => {
             res.status(200).json(instance);
     })
 };
-// Delete an institute
 const instituteDeleteOne = async (req, res) => {
     const institution_id = req.params.id;
-    const institute = await Institution.findOne({
-        where: {
-            id: institution_id
-        }
-    });
-    if (!institute) {
+    let institute;
+    try {
+        institute = await Institution.findOne({
+            where: {
+                id: institution_id
+            }
+        });
+    } catch (err) {
         res.status(404).json({
-            'message': 'INSTITUTION NOT FOUND!'
+            'message': 'INSTITUTE NOT FOUND!'
         });
         return;
     }
