@@ -26,6 +26,12 @@ const institutionReadOne = async (req, res) => {
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!institute) {
         res.status(404).json({
             'message': 'INSTITUTE NOT FOUND!'
         });
@@ -34,11 +40,12 @@ const institutionReadOne = async (req, res) => {
     res.status(200).json(institute);
 };
 const institutionCreateOne = async (req, res) => {
-    let institute = {
+    const instituteInstance = {
         name: req.body.name
     };
+    let institute;
     try {
-        await Institution.create(instituteInstance);
+        institute = await Institution.create(instituteInstance);
     } catch (err) {
         res.status(500).json({
             'message': 'INTERNAL SERVER ERROR!'
@@ -57,6 +64,12 @@ const institutionUpdateOne = async (req, res) => {
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!institute) {
         res.status(404).json({
             'message': 'INSTITUTE NOT FOUND!'
         });
@@ -65,7 +78,9 @@ const institutionUpdateOne = async (req, res) => {
     institute.name = req.body.name;
     institute.save().then((instance, err) => {
         if (err)
-            res.status(500).json(err);
+            res.status(500).json({
+                'message': 'INTERNAL SERVER ERROR!'
+            });
         else
             res.status(200).json(instance);
     })
@@ -80,6 +95,12 @@ const instituteDeleteOne = async (req, res) => {
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!institute) {
         res.status(404).json({
             'message': 'INSTITUTE NOT FOUND!'
         });

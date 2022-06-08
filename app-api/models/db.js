@@ -8,6 +8,7 @@ const {
 const syncDataBase = async () => {
     await sequelize.sync({
         alter: true
+        // force:true
     });
 };
 
@@ -138,63 +139,73 @@ Program_created_by.init({
 Institution.hasMany(Lecturer, {
     foreignKey: {
         name: 'institution_id',
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        allowNull: false
     }
 });
 Lecturer.belongsTo(Institution, {
     foreignKey: {
         name: 'institution_id',
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        allowNull: false
     }
 })
 
 Program.hasMany(On_Program, {
     foreignKey: {
         name: 'program_id',
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        allowNull: false
     }
 });
 On_Program.belongsTo(Program, {
     foreignKey: {
         name: 'program_id',
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        allowNull: false
     }
 });
 Lecturer.hasMany(On_Program, {
     foreignKey: {
         name: 'lecturer_id',
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        allowNull: false
     }
 });
 On_Program.belongsTo(Lecturer, {
     foreignKey: {
         name: 'lecturer_id',
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        allowNull: false
     }
 });
 
 Program.hasMany(Program_created_by, {
     foreignKey: {
         name: 'program_id',
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        allowNull: false
     }
 });
 Program_created_by.belongsTo(Program, {
     foreignKey: {
         name: 'program_id',
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        allowNull: false
     }
 });
 Institution.hasMany(Program_created_by, {
     foreignKey: {
         name: 'institution_id',
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        allowNull: false
     }
 });
 Program_created_by.belongsTo(Institution, {
     foreignKey: {
         name: 'institution_id',
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        allowNull: false
     }
 });
 

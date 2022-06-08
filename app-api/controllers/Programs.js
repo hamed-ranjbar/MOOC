@@ -25,6 +25,12 @@ const programReadOne = async (req, res) => {
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!program) {
         res.status(404).json({
             'message': 'PROGRAM NOT FOUND!'
         });
@@ -33,13 +39,14 @@ const programReadOne = async (req, res) => {
     res.status(200).json(program);
 };
 const programCreateOne = async (req, res) => {
-    let program = {
+    const programInstance = {
         name: req.body.name,
         description: req.body.description,
         active: req.body.active
     };
+    let program;
     try {
-        await Program.create(program);
+        program = await Program.create(programInstance);
     } catch (err) {
         res.status(500).json({
             'message': 'INTERNAL SERVER ERROR!'
@@ -58,6 +65,12 @@ const programUpdateOne = async (req, res) => {
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!program) {
         res.status(404).json({
             'message': 'PROGRAM NOT FOUND!'
         });
@@ -85,6 +98,12 @@ const programDeleteOne = async (req, res) => {
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!program) {
         res.status(404).json({
             'message': 'PROGRAM NOT FOUND!'
         });

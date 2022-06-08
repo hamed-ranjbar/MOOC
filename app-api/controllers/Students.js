@@ -17,30 +17,37 @@ const studentsList = async (req, res) => {
 };
 const studentReadOne = async (req, res) => {
     const studentId = req.params.student_id;
-    let student;
+    let program;
     try {
-        student = await Student.findOne({
+        program = await Program.findOne({
             where: {
-                id: studentId
+                id: programId
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!program) {
         res.status(404).json({
-            'message': 'STUDENT NOT FOUND!'
+            'message': 'PROGRAM NOT FOUND!'
         });
         return;
     }
     res.status(200).json(student);
 };
 const studentCreateOne = async (req, res) => {
-    let student = {
+    const studentInstance = {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
         password: req.body.password
-    }
+    };
+    let student;
     try {
-        await Student.create(student);
+        student = await Student.create(studentInstance);
     } catch (err) {
         res.status(500).json({
             'message': 'INTERNAL SERVER ERROR!'
@@ -51,16 +58,22 @@ const studentCreateOne = async (req, res) => {
 };
 const studentUpdateOne = async (req, res) => {
     const studentId = req.params.id;
-    let student;
+    let program;
     try {
-        student = await Student.findOne({
+        program = await Program.findOne({
             where: {
-                id: studentId
+                id: programId
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!program) {
         res.status(404).json({
-            'message': 'STUDENT NOT FOUND!'
+            'message': 'PROGRAM NOT FOUND!'
         });
         return;
     }
@@ -79,16 +92,22 @@ const studentUpdateOne = async (req, res) => {
 };
 const studentDeleteOne = async (req, res) => {
     const studentId = req.params.id;
-    let student;
+    let program;
     try {
-        student = await Student.findOne({
+        program = await Program.findOne({
             where: {
-                id: studentId
+                id: programId
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!program) {
         res.status(404).json({
-            'message': 'STUDENT NOT FOUND!'
+            'message': 'PROGRAM NOT FOUND!'
         });
         return;
     }

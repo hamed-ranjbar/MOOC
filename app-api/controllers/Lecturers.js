@@ -25,6 +25,12 @@ const lecturerReadOne = async (req, res) => {
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!lecturer) {
         res.status(404).json({
             'message': 'LECTURER NOT FOUND!'
         });
@@ -33,14 +39,15 @@ const lecturerReadOne = async (req, res) => {
     res.status(200).json(lecturer);
 };
 const lecturerCreateOne = async (req, res) => {
-    const lecturer = {
+    const lecturerInstance = {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         title: req.body.title,
         institution_id: req.body.institution_id
     }
+    let lecturer;
     try {
-        await Lecturer.create(lecturer);
+        lecturer = await Lecturer.create(lecturerInstance);
     } catch (err) {
         res.status(500).json({
             'message': 'INTERNAL SERVER ERROR!'
@@ -59,6 +66,12 @@ const lecturerUpdateOne = async (req, res) => {
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!lecturer) {
         res.status(404).json({
             'message': 'LECTURER NOT FOUND!'
         });
@@ -88,6 +101,12 @@ const lecturerDeleteOne = async (req, res) => {
             }
         });
     } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    if (!lecturer) {
         res.status(404).json({
             'message': 'LECTURER NOT FOUND!'
         });
