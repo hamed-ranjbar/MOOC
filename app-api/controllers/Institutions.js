@@ -2,6 +2,13 @@ const {
     Institution
 } = require('../models/db');
 
+////////////////////////////////
+//                            //
+//        Institution         //
+//     (API Controllers)      //
+//                            //
+////////////////////////////////
+
 const institutionsList = async (req, res) => {
     const institutionList = await Institution.findAll();
     console.log("All institutes:", JSON.stringify(institutionList, null, 2));
@@ -76,14 +83,15 @@ const institutionUpdateOne = async (req, res) => {
         return;
     }
     institute.name = req.body.name;
-    institute.save().then((instance, err) => {
-        if (err)
-            res.status(500).json({
-                'message': 'INTERNAL SERVER ERROR!'
-            });
-        else
-            res.status(200).json(instance);
-    })
+    try {
+        await institute.save()
+    } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    res.status(200).json(instance);
 };
 const instituteDeleteOne = async (req, res) => {
     const institution_id = req.params.id;
@@ -106,14 +114,15 @@ const instituteDeleteOne = async (req, res) => {
         });
         return;
     }
-    institute.destroy().then((response, err) => {
-        if (err)
-            res.status(500).json({
-                'message': 'INTERNAL SERVER ERROR!'
-            });
-        else
-            res.status(204).json({});
-    });
+    try {
+        await institute.destroy();
+    } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    res.status(204).json({});
 };
 
 module.exports = {

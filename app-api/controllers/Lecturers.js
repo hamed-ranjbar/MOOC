@@ -2,6 +2,13 @@ const {
     Lecturer
 } = require('../models/db');
 
+////////////////////////////////
+//                            //
+//         Lecturer           //
+//     (API Controllers)      //
+//                            //
+////////////////////////////////
+
 const lecturersList = async (req, res) => {
     const lecturerList = await Lecturer.findAll();
     if (lecturerList == null)
@@ -81,15 +88,15 @@ const lecturerUpdateOne = async (req, res) => {
     lecturer.lastName = req.body.lastName;
     lecturer.title = req.body.title;
     lecturer.institution_id = req.body.institution_id;
-
-    lecturer.save().then((lecturer, err) => {
-        if (err)
-            res.status(500).json({
-                'message': 'INTERNAL SERVER ERROR!'
-            });
-        else
-            res.status(200).json(lecturer);
-    });
+    try {
+        await lecturer.save();
+    } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    res.status(200).json(lecturer);
 };
 const lecturerDeleteOne = async (req, res) => {
     const lecturerId = req.params.id;
@@ -112,14 +119,15 @@ const lecturerDeleteOne = async (req, res) => {
         });
         return;
     }
-    lecturer.destroy().then((response, err) => {
-        if (err)
-            res.status(500).json({
-                'message': 'INTERNAL SERVER ERROR!'
-            });
-        else
-            res.status(204).json({});
-    })
+    try {
+        await lecturer.destroy();
+    } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    res.status(204).json({});
 };
 
 module.exports = {

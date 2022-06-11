@@ -1,12 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
+////////////////////////////////
+//                            //
+//     Model Controllers      //
+//                            //
+////////////////////////////////
+
+// Adding Controllers
 const institutionCTRL = require('../controllers/Institutions');
 const studentCTRL = require('../controllers/Students');
 const LecturerCTRL = require('../controllers/Lecturers');
-const ProgramCTRL = require('../controllers/Programs');
-const On_ProgramCTRL = require('../controllers/On_Program');
-const Program_created_byCTRL = require('../controllers/Program_created_by');
+const ProgramCTRL = require('../controllers/Program Details');
+const CourseCTRL = require('../controllers/Course Details');
+
+////////////////////////////////
+//                            //
+//        API Routers         //
+//                            //
+////////////////////////////////
 
 // Institution CRUD API
 router.get('/institutions', institutionCTRL.institutionsList);
@@ -37,15 +49,61 @@ router.put('/program/:id',ProgramCTRL.programUpdateOne);
 router.delete('/program/:id',ProgramCTRL.programDeleteOne);
 
 // On_Program CRUD API
-router.get('/onprogram/lecturer/:id',On_ProgramCTRL.lecturerOnProgramList);
-router.get('/onprogram/program/:id',On_ProgramCTRL.programOnProgramList);
-router.post('/onprogram',On_ProgramCTRL.onprogramCreateOne);
-router.delete('/onprogram/:id',On_ProgramCTRL.onProgramDeleteOne);
+router.get('/onprogram/lecturer/:id',ProgramCTRL.lecturerOnProgramList);
+router.get('/onprogram/program/:id',ProgramCTRL.programOnProgramList);
+router.post('/onprogram',ProgramCTRL.onprogramCreateOne);
+router.delete('/onprogram/:id',ProgramCTRL.onProgramDeleteOne);
 
 // Program_created_by CRUD API
-router.get('/programcreatedby/institute/:id',Program_created_byCTRL.institutionProgramCreatedByList);
-router.get('/programcreatedby/program/:id',Program_created_byCTRL.programProgramCreatedByList);
-router.post('/programcreatedby',Program_created_byCTRL.ProgramCreatedByCreateOne);
-router.delete('/programcreatedby/:id',Program_created_byCTRL.ProgramCreatedByDeleteOne);
+router.get('/programcreatedby/institute/:id',ProgramCTRL.institutionProgramCreatedByList);
+router.get('/programcreatedby/program/:id',ProgramCTRL.programProgramCreatedByList);
+router.post('/programcreatedby',ProgramCTRL.ProgramCreatedByCreateOne);
+router.delete('/programcreatedby/:id',ProgramCTRL.ProgramCreatedByDeleteOne);
+
+// Course CRUD API
+router.get('/courses',CourseCTRL.coursesList);
+router.get('/course/:id',CourseCTRL.courseReadOne);
+router.post('/course',CourseCTRL.courseCreateOne);
+router.put('/course/:id',CourseCTRL.courseUpdateOne);
+router.delete('/course/:id',CourseCTRL.courseDeleteOne);
+
+// On_Course CRUD API
+router.get('/oncourse/lecturer/:id',CourseCTRL.lecturerOnCourseList);
+router.get('/oncourse/course/:id',CourseCTRL.courseOnCourseList);
+router.post('/oncourse',CourseCTRL.onCourseCreateOne);
+router.delete('/oncourse/:id',CourseCTRL.onCourseDeleteOne);
+
+// Course_created_by CRUD API
+router.get('/coursecreatedby/institute/:id',CourseCTRL.institutionCourseCreatedByList);
+router.get('/coursecreatedby/course/:id',CourseCTRL.courseCourseCreatedByList);
+router.post('/coursecreatedby',CourseCTRL.courseCreatedByCreateOne);
+router.delete('/coursecreatedby/:id',CourseCTRL.courseCreatedByDeleteOne);
+
+// Chapter CRUD API
+router.get('/chapters/course/:id',CourseCTRL.courseChaptersList);
+router.get('/chapter/:id',CourseCTRL.chapterReadOne);
+router.post('/chapter',CourseCTRL.chapterCreateOne);
+router.put('/chapter/:id',CourseCTRL.chapterUpdateOne);
+router.delete('/chapter/:id',CourseCTRL.chapterDeleteOne);
+
+// Part CRUD API
+router.get('/parts/chapter/:id',CourseCTRL.chapterpartsList);
+router.get('/part/:id',CourseCTRL.partReadOne);
+router.post('/part',CourseCTRL.partCreateOne);
+router.put('/part/:id',CourseCTRL.partUpdateOne);
+router.delete('/part/:id',CourseCTRL.partDeleteOne);
+
+// Material_type CRUD API
+router.get('/material_types/',CourseCTRL.materialTypesList);
+router.get('/material_type/:id',CourseCTRL.materialTypeReadOne);
+router.post('/material_type',CourseCTRL.materialTypeCreateOne);
+router.delete('/material_type/:id',CourseCTRL.materialTypeDeleteOne);
+
+// Material CRUD API
+router.get('/materials/part/:id',CourseCTRL.partmaterialsList);
+router.get('/material/:id',CourseCTRL.materialReadOne);
+router.post('/material',CourseCTRL.materialCreateOne);
+router.put('/material/:id',CourseCTRL.materialUpdateOne);
+router.delete('/material/:id',CourseCTRL.materialDeleteOne);
 
 module.exports = router;

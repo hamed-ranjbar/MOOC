@@ -2,6 +2,13 @@ const {
     Student
 } = require('../models/db');
 
+////////////////////////////////
+//                            //
+//          Student           //
+//     (API Controllers)      //
+//                            //
+////////////////////////////////
+
 const studentsList = async (req, res) => {
     const studentList = await Student.findAll();
     if (studentList == null)
@@ -81,14 +88,15 @@ const studentUpdateOne = async (req, res) => {
     student.lastName = req.body.lastName;
     student.email = req.body.email;
     student.password = req.body.password;
-    student.save().then((response, err) => {
-        if (err)
-            res.status(500).json({
-                'message': 'INTERNAL SERVER ERROR!'
-            });
-        else
-            res.status(200).json(student);
-    });
+    try {
+        await student.save();
+    } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    res.status(200).json(student);
 };
 const studentDeleteOne = async (req, res) => {
     const studentId = req.params.id;
@@ -111,14 +119,15 @@ const studentDeleteOne = async (req, res) => {
         });
         return;
     }
-    student.destroy().then((response, err) => {
-        if (err)
-            res.status(500).json({
-                'message': 'INTERNAL SERVER ERROR'
-            })
-        else
-            res.status(204).json({});
-    });
+    try {
+        await student.destroy();
+    } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR'
+        });
+        return;
+    }
+    res.status(204).json({});
 };
 
 module.exports = {
