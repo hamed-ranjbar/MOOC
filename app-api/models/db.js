@@ -241,6 +241,9 @@ MaterialType.init({
         unique: true,
         allowNull: false
     }
+}, {
+    sequelize,
+    modelName: 'material_type'
 });
 // Material Model Attributes
 Material.init({
@@ -263,7 +266,15 @@ StudentResults.init({
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
-    }
+    },
+    attempt:DataTypes.INTEGER,
+    attempt_link:DataTypes.STRING,
+    started:{
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    },
+    ended:DataTypes.DATE,
+    score:DataTypes.INTEGER
 }, {
     sequelize,
     modelName: 'student_result'
@@ -274,7 +285,11 @@ EnrolledCourse.init({
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
-    }
+    },
+    enrollement_date:DataTypes.DATE,
+    status_date:DataTypes.DATE,
+    final_grade:DataTypes.INTEGER,
+    certificate_id:DataTypes.STRING
 }, {
     sequelize,
     modelName: 'enrolled_course'
@@ -285,7 +300,9 @@ CourseSession.init({
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
-    }
+    },
+    start_date:DataTypes.DATE,
+    end_date:DataTypes.DATE
 }, {
     sequelize,
     modelName: 'course_session'
@@ -296,7 +313,9 @@ ProgramSession.init({
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
-    }
+    },
+    start_date:DataTypes.DATE,
+    end_date:DataTypes.DATE
 }, {
     sequelize,
     modelName: 'program_session'
@@ -307,7 +326,8 @@ Status.init({
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
-    }
+    },
+    status_name:DataTypes.STRING
 }, {
     sequelize,
     modelName: 'status'
@@ -318,7 +338,11 @@ EnrolledProgram.init({
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
-    }
+    },
+    enrollement_date:DataTypes.DATE,
+    status_date:DataTypes.DATE,
+    final_grade:DataTypes.INTEGER,
+    certificate_id: DataTypes.STRING
 }, {
     sequelize,
     modelName: 'enrolled_program'
@@ -548,36 +572,168 @@ Material.belongsTo(Part, {
 });
 
 // Student Results Relations
-StudentResults.belongsTo(Material,{foreignKey:{name:'material_id',type:DataTypes.UUID,allowNull:false}});
-Material.hasMany(StudentResults,{foreignKey:{name:'material_id',type:DataTypes.UUID,allowNull:false}});
-StudentResults.belongsTo(EnrolledCourse,{foreignKey:{name:'enrolled_course_id',type:DataTypes.UUID,allowNull:false}});
-EnrolledCourse.hasMany(StudentResults,{foreignKey:{name:'enrolled_course_id',type:DataTypes.UUID,allowNull:false}});
+StudentResults.belongsTo(Material, {
+    foreignKey: {
+        name: 'material_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+Material.hasMany(StudentResults, {
+    foreignKey: {
+        name: 'material_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+StudentResults.belongsTo(EnrolledCourse, {
+    foreignKey: {
+        name: 'enrolled_course_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+EnrolledCourse.hasMany(StudentResults, {
+    foreignKey: {
+        name: 'enrolled_course_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
 
 // Enrolled Course Relations
-EnrolledCourse.belongsTo(CourseSession,{foreignKey:{name:'course-session_id',type:DataTypes.UUID,allowNull:false}});
-CourseSession.hasMany(EnrolledCourse,{foreignKey:{name:'course-session_id',type:DataTypes.UUID,allowNull:false}});
-EnrolledCourse.belongsTo(Status,{foreignKey:{name:'status_id',type:DataTypes.UUID,allowNull:false}});
-Status.hasMany(EnrolledCourse,{foreignKey:{name:'status_id',type:DataTypes.UUID,allowNull:false}});
-EnrolledCourse.belongsTo(Student,{foreignKey:{name:'student_id',type:DataTypes.UUID,allowNull:false}});
-Student.hasMany(EnrolledCourse,{foreignKey:{name:'student_id',type:DataTypes.UUID,allowNull:false}});
+EnrolledCourse.belongsTo(CourseSession, {
+    foreignKey: {
+        name: 'course-session_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+CourseSession.hasMany(EnrolledCourse, {
+    foreignKey: {
+        name: 'course-session_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+EnrolledCourse.belongsTo(Status, {
+    foreignKey: {
+        name: 'status_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+Status.hasMany(EnrolledCourse, {
+    foreignKey: {
+        name: 'status_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+EnrolledCourse.belongsTo(Student, {
+    foreignKey: {
+        name: 'student_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+Student.hasMany(EnrolledCourse, {
+    foreignKey: {
+        name: 'student_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
 
 // Course Session Relations
-CourseSession.belongsTo(Course,{foreignKey:{name:'course_id',type:DataTypes.UUID,allowNull:false}});
-Course.hasMany(CourseSession,{foreignKey:{name:'course_id',type:DataTypes.UUID,allowNull:false}});
-CourseSession.belongsTo(ProgramSession,{foreignKey:{name:'program_session_id',type:DataTypes.UUID,allowNull:false}});
-ProgramSession.hasMany(CourseSession,{foreignKey:{name:'program_session_id',type:DataTypes.UUID,allowNull:false}});
+CourseSession.belongsTo(Course, {
+    foreignKey: {
+        name: 'course_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+Course.hasMany(CourseSession, {
+    foreignKey: {
+        name: 'course_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+CourseSession.belongsTo(ProgramSession, {
+    foreignKey: {
+        name: 'program_session_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+ProgramSession.hasMany(CourseSession, {
+    foreignKey: {
+        name: 'program_session_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
 
 // Program Session Relations
-ProgramSession.belongsTo(Program,{foreignKey:{name:'program_id',type:DataTypes.UUID,allowNull:false}});
-Program.hasMany(ProgramSession,{foreignKey:{name:'program_id',type:DataTypes.UUID,allowNull:false}});
+ProgramSession.belongsTo(Program, {
+    foreignKey: {
+        name: 'program_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+Program.hasMany(ProgramSession, {
+    foreignKey: {
+        name: 'program_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
 
 // Enrolled Program Relations
-EnrolledProgram.belongsTo(ProgramSession,{foreignKey:{name:'program_session_id',type:DataTypes.UUID,allowNull:false}});
-ProgramSession.hasMany(EnrolledProgram,{foreignKey:{name:'program_session_id',type:DataTypes.UUID,allowNull:false}});
-EnrolledProgram.belongsTo(Status,{foreignKey:{name:'status_id',type:DataTypes.UUID,allowNull:false}});
-Status.hasMany(EnrolledProgram,{foreignKey:{name:'status_id',type:DataTypes.UUID,allowNull:false}});
-EnrolledProgram.belongsTo(Student,{foreignKey:{name:'student_id',type:DataTypes.UUID,allowNull:false}});
-Student.hasMany(EnrolledProgram,{foreignKey:{name:'student_id',type:DataTypes.UUID,allowNull:false}});
+EnrolledProgram.belongsTo(ProgramSession, {
+    foreignKey: {
+        name: 'program_session_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+ProgramSession.hasMany(EnrolledProgram, {
+    foreignKey: {
+        name: 'program_session_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+EnrolledProgram.belongsTo(Status, {
+    foreignKey: {
+        name: 'status_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+Status.hasMany(EnrolledProgram, {
+    foreignKey: {
+        name: 'status_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+EnrolledProgram.belongsTo(Student, {
+    foreignKey: {
+        name: 'student_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+Student.hasMany(EnrolledProgram, {
+    foreignKey: {
+        name: 'student_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
 
 syncDataBase();
 

@@ -13,7 +13,7 @@ const studentCTRL = require('../controllers/Students');
 const LecturerCTRL = require('../controllers/Lecturers');
 const ProgramCTRL = require('../controllers/Program Details');
 const CourseCTRL = require('../controllers/Course Details');
-
+const ParticipationCTRL = require('../controllers/Participation Details');
 ////////////////////////////////
 //                            //
 //        API Routers         //
@@ -105,5 +105,47 @@ router.get('/material/:id',CourseCTRL.materialReadOne);
 router.post('/material',CourseCTRL.materialCreateOne);
 router.put('/material/:id',CourseCTRL.materialUpdateOne);
 router.delete('/material/:id',CourseCTRL.materialDeleteOne);
+
+// Student_Result CRUD API
+router.get('/studentresults/enrolledcourse/:id',ParticipationCTRL.enrolledCourseStudentResultsList);
+router.get('/studentresult/:id',ParticipationCTRL.studentResultReadOne);
+router.post('/studentresult',ParticipationCTRL.studentResultCreateOne);
+router.put('/studentresult/:id',ParticipationCTRL.studentResultUpdateOne);
+router.delete('/studentresult/:id',ParticipationCTRL.studentResultDeleteOne);
+
+// Enrolled_Course CRUD API
+router.get('/enrolledcourses/student/:id',ParticipationCTRL.courseSessionEnrolledCoursesList);
+router.get('/enrolledcourse/:id',ParticipationCTRL.enrolledCourseReadOne);
+router.post('/enrolledcourse',ParticipationCTRL.enrolledCourseCreateOne);
+router.put('/enrolledcourse/:id',ParticipationCTRL.enrolledCourseUpdateOne);
+router.delete('/enrolledcourse/:id',ParticipationCTRL.enrolledCourseDeleteOne);
+
+// Course_Session CRUD API
+router.get('/coursesessions/course/:id',ParticipationCTRL.courseCourseSessionsList);
+router.get('/coursesession/:id',ParticipationCTRL.courseSessionReadOne);
+router.post('/coursesession',ParticipationCTRL.courseSessionCreateOne);
+router.put('/coursesession/:id',ParticipationCTRL.courseSessionUpdateOne);
+router.delete('/coursesession/:id',ParticipationCTRL.courseSessionDeleteOne);
+
+// Status CRUD API
+router.get('/statuss/part/:id',ParticipationCTRL.statusesList);
+router.get('/status/:id',ParticipationCTRL.statusReadOne);
+router.post('/status',ParticipationCTRL.statusCreateOne);
+router.put('/status/:id',ParticipationCTRL.statusUpdateOne);
+router.delete('/status/:id',ParticipationCTRL.statusDeleteOne);
+
+// Program_Session CRUD API
+router.get('/programsessions/program/:id',ParticipationCTRL.programProgramSessionsList);
+router.get('/programsession/:id',ParticipationCTRL.programSessionReadOne);
+router.post('/programsession',ParticipationCTRL.programSessionCreateOne);
+router.put('/programsession/:id',ParticipationCTRL.programSessionUpdateOne);
+router.delete('/programsession/:id',ParticipationCTRL.programSessionDeleteOne);
+
+// Enrolled_Program CRUD API
+router.get('/enrolledprograms/part/:id',ParticipationCTRL.programEnrolledProgramsList);
+router.get('/enrolledprogram/:id',ParticipationCTRL.enrolledProgramReadOne);
+router.post('/enrolledprogram',ParticipationCTRL.enrolledProgramCreateOne);
+router.put('/enrolledprogram/:id',ParticipationCTRL.enrolledProgramUpdateOne);
+router.delete('/enrolledprogram/:id',ParticipationCTRL.enrolledProgramDeleteOne);
 
 module.exports = router;
