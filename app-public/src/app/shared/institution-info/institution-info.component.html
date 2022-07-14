@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-12 col-md-3">
+    <figure class="figure">
+      <img src="assets/{{institution.name}}.jpg" class="figure-img img-fluid rounded" alt="institution picture">
+      <figcaption class="figure-caption">{{institution.name}}</figcaption>
+    </figure>
+  </div>
+  <div class="col-12 col-md-9" [innerHtml]="description | htmlLineBreak">
+  </div>
+</div>
+<hr />

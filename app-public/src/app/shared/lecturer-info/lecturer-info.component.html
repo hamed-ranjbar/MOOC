@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-12 col-md-3">
+    <figure class="figure">
+      <img src="assets/{{Lecturer.firstName + ' ' +Lecturer.lastName}}.jpg" class="figure-img img-fluid rounded"
+        alt="Lecturer picture">
+      <figcaption class="figure-caption">{{Lecturer.firstName + ' ' +Lecturer.lastName}}</figcaption>
+    </figure>
+  </div>
+  
+  <div class="col-12 col-md-9">
+    <h3>{{Lecturer.firstName + ' ' +Lecturer.lastName}}</h3>
+    <p [innerHtml]="description | htmlLineBreak"></p>
+  </div>
+</div>
+<hr />

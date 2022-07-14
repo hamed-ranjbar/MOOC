@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MoocDataService } from '../mooc-data.service';
-import { Program } from '../program';
+import { Program } from '../interfaces/program';
 
 @Component({
   selector: 'app-programs',

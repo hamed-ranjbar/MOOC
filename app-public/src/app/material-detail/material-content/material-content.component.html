@@ -1,0 +1,12 @@
+<button type="button" class="btn btn-info" (click)="goPrevious()">Previous</button>
+<span [ngSwitch]="materialType.type_name">
+  <div *ngSwitchCase="'text'">
+    <p [innerHtml]="material.material_link | htmlLineBreak"></p>
+  </div>
+  <div *ngSwitchCase="'picture'">
+    <img src="assets/{{material.material_link}}.jpg" alt="material picture" style="width: 100%;">
+  </div>
+</span>
+
+
+<button type="button" class="btn btn-warning float-end" (click)="goNext()">Next</button>

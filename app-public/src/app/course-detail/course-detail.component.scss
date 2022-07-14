@@ -1,0 +1,9 @@
+.transparent{
+    background-color: rgba($color: white, $alpha: .5);
+    padding: 20px;
+}
+
+.bg-img{
+    background-image: url("../../assets/GTTP.jpg");
+    background-size: cover;
+}

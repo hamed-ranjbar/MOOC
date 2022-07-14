@@ -11,13 +11,17 @@ import { SharedModule } from './shared/shared.module';
 import { ProgramsModule } from './programs/programs.module';
 import { ContactModule } from './contact/contact.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HtmlLineBreakPipe } from './html-line-break.pipe';
 import { ProgramDetailModule } from './program-detail/program-detail.module';
+import { CourseDetailModule } from './course-detail/course-detail.module';
+import { HtmlLineBreakPipe } from './html-line-break.pipe';
+import { MaterialDetailModule } from './material-detail/material-detail.module';
+import { CertificateModule } from './certificate/certificate.module';
+
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HtmlLineBreakPipe
+    AppComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -27,8 +31,11 @@ import { ProgramDetailModule } from './program-detail/program-detail.module';
     SharedModule,
     ProgramsModule,
     ProgramDetailModule,
+    CourseDetailModule,
     ContactModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MaterialDetailModule,
+    CertificateModule
   ],
   providers: [],
   bootstrap: [AppComponent]

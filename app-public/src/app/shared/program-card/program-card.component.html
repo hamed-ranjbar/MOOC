@@ -1,10 +1,14 @@
-<div class="col-12 col-md-4">
-  <div class="card">
-    <img class="card-img-top" src="" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">{{program.name}}</h5>
-      <p class="card-text">{{program.description}}</p>
-      <a href="program/{{program.id}}" class="btn btn-primary">Details</a>
-    </div>
-  </div>
-</div>
+<mat-card *ngIf="program && institute" class="example-card col-12 col-md-4">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-title>{{program.name}}</mat-card-title>
+    <mat-card-subtitle>{{institute.name}}</mat-card-subtitle>
+  </mat-card-header>
+  <img mat-card-image src="assets/{{program.name}}.jpg" alt="Photo of a Shiba Inu">
+  <mat-card-content>
+    <p>{{program.description}}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button routerLink="/program/{{program.id}}" mat-button>View Program</button>
+  </mat-card-actions>
+</mat-card>

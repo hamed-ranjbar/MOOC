@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class HtmlLineBreakPipe implements PipeTransform {
 
   transform(text: string): string {
-    return text.replace(/\n/g,'<br/>');
+    return text.replace(/\n/g,'<br/>').replace(/\\n/g,'<br/>');
   }
 
 }

@@ -39,7 +39,14 @@ const courseReadOne = async (req, res) => {
         course = await Course.findOne({
             where: {
                 id: courseId
-            }
+            },
+            include: [{
+                model: Chapter,
+                include: [{
+                    model: Part,
+                    include: [Material]
+                }]
+            }]
         });
     } catch (err) {
         res.status(500).json({
@@ -654,12 +661,10 @@ const materialTypeReadOne = async (req, res) => {
     }
     if (!materialType)
         res.status(404).json({
-            'message': 'MATERIALType NOT FOUND!'
+            'message': 'MATERIAL_TYPE NOT FOUND!'
         });
     else
-        res.status(200).json({
-            'message': 'NO MATERIAL_TYPE FOUND!'
-        });
+        res.status(200).json(materialType);
 };
 const materialTypeCreateOne = async (req, res) => {
     const materialTypeInstance = {

@@ -1,1 +1,31 @@
-<p>program-detail works!</p>
+<app-page-title [content]="pageContent.header"></app-page-title>
+
+<mat-tab-group dynamicHeight color="accent">
+  <mat-tab label="Course(s)">
+    <mat-card class="example-card col-12 col-md-4" *ngFor="let course of courses">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>{{course.name}}</mat-card-title>
+        <mat-card-subtitle>{{course.commitment}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{course.description}}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/course/{{course.id}}">view course</button>
+      </mat-card-actions>
+    </mat-card>
+  </mat-tab>
+
+  <mat-tab label="Institution(s)">
+    <app-institution-info *ngFor="let institute of institutions" [institution]="institute"></app-institution-info>
+  </mat-tab>
+
+  <mat-tab label="Lecturer(s)">
+    <app-lecturer-info *ngFor="let lecturer of lecturers" [Lecturer]="lecturer"></app-lecturer-info>
+  </mat-tab>
+</mat-tab-group>
+
+<br />
+<br />
+<br />
