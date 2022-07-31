@@ -6,6 +6,8 @@ const {
     UUIDV4,
     UUID
 } = require('sequelize');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 // Syncs DataBase Tables
 const syncDataBase = async () => {
@@ -43,6 +45,24 @@ class Student extends Model {
     getFullName() {
         return [this.firstName, this.lastName].join(' ')
     }
+    setHash(password) {
+        this.salt = crypto.randomBytes(16).toString('hex');
+        this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
+    }
+    validPassword(password) {
+        return this.hash == crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
+    }
+    generateJWT() {
+        const expiry = new Date();
+        expiry.setDate(expiry.getDate() + 7);
+        return jwt.sign({
+            id: this.id,
+            email: this.email,
+            first_name: this.first_name,
+            last_name: this.last_name,
+            exp: parseInt(expiry.getTime() / 1000, 10)
+        }, process.env.SECRET)
+    }
 };
 class Program extends Model {};
 class On_Program extends Model {};
@@ -60,6 +80,8 @@ class CourseSession extends Model {};
 class ProgramSession extends Model {};
 class Status extends Model {};
 class EnrolledProgram extends Model {};
+class StudentFavoriteCourse extends Model {};
+class StudentFavoriteProgram extends Model {};
 
 ////////////////////////////////
 //                            //
@@ -102,8 +124,8 @@ Student.init({
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
+    first_name: DataTypes.STRING,
+    last_name: DataTypes.STRING,
     email: {
         type: DataTypes.STRING,
         unique: true,
@@ -111,12 +133,8 @@ Student.init({
             isEmail: true
         }
     },
-    password: {
-        type: DataTypes.STRING,
-        validate: {
-            len: [8, 100]
-        }
-    }
+    hash: DataTypes.STRING,
+    salt: DataTypes.STRING
 }, {
     // Other model options go here
     sequelize, // We need to pass the connection instance
@@ -139,7 +157,7 @@ Program.init({
     sequelize,
     modelName: 'program'
 });
-// On_Program Model Attributes
+// On Program Model Attributes
 On_Program.init({
     id: {
         type: DataTypes.UUID,
@@ -150,7 +168,7 @@ On_Program.init({
     sequelize,
     modelName: 'on_program'
 });
-// Program_created_by Model Attributes
+// Program created by Model Attributes
 Program_created_by.init({
     id: {
         type: DataTypes.UUID,
@@ -181,7 +199,7 @@ Course.init({
     sequelize,
     modelName: 'course'
 });
-// On_Course Model Attributes
+// On Course Model Attributes
 On_Course.init({
     id: {
         type: DataTypes.UUID,
@@ -192,7 +210,7 @@ On_Course.init({
     sequelize,
     modelName: 'on_course'
 });
-// Course_created_by Model Attributes
+// Course created by Model Attributes
 Course_created_by.init({
     id: {
         type: DataTypes.UUID,
@@ -229,7 +247,7 @@ Part.init({
     sequelize,
     modelName: 'part'
 });
-// Material_Type Attributes
+// Material Type Attributes
 MaterialType.init({
     id: {
         type: DataTypes.UUID,
@@ -253,56 +271,56 @@ Material.init({
         primaryKey: true
     },
     material_no: DataTypes.INTEGER,
-    material_link: DataTypes.STRING,
+    material_content: DataTypes.STRING,
     mandatory: DataTypes.BOOLEAN,
     max_point: DataTypes.INTEGER
 }, {
     sequelize,
     modelName: 'material'
 });
-// Student_Results Model Attributes
+// Student Results Model Attributes
 StudentResults.init({
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    attempt:DataTypes.INTEGER,
-    attempt_link:DataTypes.STRING,
-    started:{
+    attempt: DataTypes.INTEGER,
+    attempt_link: DataTypes.STRING,
+    started: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
     },
-    ended:DataTypes.DATE,
-    score:DataTypes.INTEGER
+    ended: DataTypes.DATE,
+    score: DataTypes.INTEGER
 }, {
     sequelize,
     modelName: 'student_result'
 });
-// Enrolled_Course Model Attributes
+// Enrolled Course Model Attributes
 EnrolledCourse.init({
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    enrollement_date:DataTypes.DATE,
-    status_date:DataTypes.DATE,
-    final_grade:DataTypes.INTEGER,
-    certificate_id:DataTypes.STRING
+    enrollement_date: DataTypes.DATE,
+    status_date: DataTypes.DATE,
+    final_grade: DataTypes.INTEGER,
+    certificate_id: DataTypes.STRING
 }, {
     sequelize,
     modelName: 'enrolled_course'
 });
-// Course_Session Model Attributes
+// Course Session Model Attributes
 CourseSession.init({
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    start_date:DataTypes.DATE,
-    end_date:DataTypes.DATE
+    start_date: DataTypes.DATE,
+    end_date: DataTypes.DATE
 }, {
     sequelize,
     modelName: 'course_session'
@@ -314,8 +332,8 @@ ProgramSession.init({
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    start_date:DataTypes.DATE,
-    end_date:DataTypes.DATE
+    start_date: DataTypes.DATE,
+    end_date: DataTypes.DATE
 }, {
     sequelize,
     modelName: 'program_session'
@@ -327,27 +345,48 @@ Status.init({
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    status_name:DataTypes.STRING
+    status_name: DataTypes.STRING
 }, {
     sequelize,
     modelName: 'status'
 });
-// Enrolled_Program Model Attributes
+// Enrolled Program Model Attributes
 EnrolledProgram.init({
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    enrollement_date:DataTypes.DATE,
-    status_date:DataTypes.DATE,
-    final_grade:DataTypes.INTEGER,
+    enrollement_date: DataTypes.DATE,
+    status_date: DataTypes.DATE,
+    final_grade: DataTypes.INTEGER,
     certificate_id: DataTypes.STRING
 }, {
     sequelize,
     modelName: 'enrolled_program'
 });
+// 
+StudentFavoriteCourse.init({
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: UUIDV4,
+        primaryKey: true
+    }
+}, {
+    sequelize,
+    modelName: 'user_favorite_course'
+});
 
+StudentFavoriteProgram.init({
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: UUIDV4,
+        primaryKey: true
+    }
+}, {
+    sequelize,
+    modelName: 'user_favorite_program'
+});
 ////////////////////////////////
 //                            //
 //      Model Relations       //
@@ -735,10 +774,69 @@ Student.hasMany(EnrolledProgram, {
     }
 });
 
+// Favorite Course Relations
+StudentFavoriteCourse.belongsTo(Course, {
+    foreignKey: {
+        name: 'course_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+Course.hasMany(StudentFavoriteCourse, {
+    foreignKey: {
+        name: 'course_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+StudentFavoriteCourse.belongsTo(Student, {
+    foreignKey: {
+        name: 'student_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+Student.hasMany(StudentFavoriteCourse, {
+    foreignKey: {
+        name: 'student_id',
+        type: DataTypes.UUID,
+        allowNull: false
+    }
+});
+
+// Favorite Program Relations
+StudentFavoriteProgram.belongsTo(Program, {
+    foreignKey: {
+        name: 'program_id',
+        type: DataTypes.UUID,
+        allowNull: false,
+    }
+});
+Program.hasMany(StudentFavoriteProgram, {
+    foreignKey: {
+        name: 'program_id',
+        type: DataTypes.UUID,
+        allowNull: false,
+    }
+});
+StudentFavoriteProgram.belongsTo(Student, {
+    foreignKey: {
+        name: 'student_id',
+        type: DataTypes.UUID,
+        allowNull: false,
+    }
+})
+Student.hasMany(StudentFavoriteProgram, {
+    foreignKey: {
+        name: 'student_id',
+        type: DataTypes.UUID,
+        allowNull: false,
+    }
+});
+
 syncDataBase();
 
 module.exports = {
-    sequelize,
     Institution,
     Lecturer,
     Student,
@@ -757,5 +855,7 @@ module.exports = {
     CourseSession,
     ProgramSession,
     Status,
-    EnrolledProgram
+    EnrolledProgram,
+    StudentFavoriteCourse,
+    StudentFavoriteProgram
 }

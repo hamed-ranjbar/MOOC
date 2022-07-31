@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CertificateComponent } from './certificate/certificate.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -9,7 +10,8 @@ import { CertificateComponent } from './certificate/certificate.component';
     CertificateComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   exports: [
     CertificateComponent

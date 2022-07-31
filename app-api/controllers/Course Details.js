@@ -84,7 +84,7 @@ const courseCreateOne = async (req, res) => {
 };
 const courseUpdateOne = async (req, res) => {
     const courseId = req.params.id;
-    let course;
+    let course, response;
     try {
         course = await Course.findOne({
             where: {
@@ -111,7 +111,7 @@ const courseUpdateOne = async (req, res) => {
     course.course_price = req.body.course_price;
     course.active = req.body.active;
     try {
-        await course.save();
+        response = await course.save();
     } catch (err) {
         if (err)
             res.status(500).json({
@@ -180,7 +180,6 @@ const lecturerOnCourseList = async (req, res) => {
         res.status(200).json(onCourse);
 };
 const courseOnCourseList = async (req, res) => {
-
     const courseId = req.params.id;
     let onCourse;
     try {
@@ -200,6 +199,7 @@ const courseOnCourseList = async (req, res) => {
         });
     else
         res.status(200).json(onCourse);
+    console.log(onCourse + '\n\n');
 };
 const onCourseCreateOne = async (req, res) => {
     const onCourseInstance = {
@@ -769,7 +769,7 @@ const materialReadOne = async (req, res) => {
 const materialCreateOne = async (req, res) => {
     const materialInstance = {
         material_no: req.body.material_no,
-        material_link: req.body.material_link,
+        material_content: req.body.material_content,
         mandatory: req.body.mandatory,
         max_point: req.body.max_point,
         material_type_id: req.body.material_type_id,
@@ -809,7 +809,7 @@ const materialUpdateOne = async (req, res) => {
     }
 
     material.material_no = req.body.material_no;
-    material.material_link = req.body.material_link;
+    material.material_content = req.body.material_content;
     material.mandatory = req.body.mandatory;
     material.max_point = req.body.max_point;
     material.material_type_id = req.body.material_type_id;
@@ -855,6 +855,7 @@ const materialDeleteOne = async (req, res) => {
     }
     res.status(204).json({});
 };
+
 
 module.exports = {
     courseChaptersList,

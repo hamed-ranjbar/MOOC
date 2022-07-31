@@ -6,6 +6,7 @@ import { Program } from '../interfaces/program';
 import { Course } from '../interfaces/course';
 import { Institution } from '../interfaces/institution';
 import { Lecturer } from '../interfaces/lecturer';
+import { AuthenticationService } from '../_services/authentication.service';
 
 
 @Component({
@@ -30,7 +31,8 @@ export class ProgramDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private moocDataService: MoocDataService
+    private moocDataService: MoocDataService,
+    private auth: AuthenticationService
   ) { }
 
   private initiateProgram() {
@@ -87,12 +89,12 @@ export class ProgramDetailComponent implements OnInit {
       })
     ).subscribe((newLecturerList) => {
       if (newLecturerList && newLecturerList.length) {
-        for(let lect of newLecturerList)
-        this.moocDataService.getLecturer(lect.lecturer_id).then((newLecturer) => {
-          if (newLecturer) {
-            this.lecturers.push(newLecturer);
-          }
-        });
+        for (let lect of newLecturerList)
+          this.moocDataService.getLecturer(lect.lecturer_id).then((newLecturer) => {
+            if (newLecturer) {
+              this.lecturers.push(newLecturer);
+            }
+          });
       }
     });
   }

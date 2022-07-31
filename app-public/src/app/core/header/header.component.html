@@ -1,13 +1,35 @@
-<nav class="navbar navbar-expand navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
     <a class="navbar-brand" routerLink="/programs">MOOC Platform</a>
-    <ul class="navbar-nav me-auto">
-      <li class="nav-item">
-        <a routerLink="/programs" routerLinkActive="active" class="nav-link">Programs</a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="/contact" routerLinkActive="active" class="nav-link">Contact</a>
-      </li>
-    </ul>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a routerLink="/programs" routerLinkActive="active" class="nav-link">Programs</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/contact" routerLinkActive="active" class="nav-link">Contact</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav justify-content-end">
+        <li class="nav-item" routerLinkActive="active">
+          <a (click)="openDialog()" class="nav-link" *ngIf="!userLoggedIn">Login</a>
+        </li>
+        <li class="nav-item dropdown" routerLinkActive="active" *ngIf="userLoggedIn">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown">
+            Hi, {{ getUserName() }}
+          </a>
+
+          <div class="dropdown-menu">
+            <a class="dropdown-item" routerLink="/">Profile</a>
+            <a class="dropdown-item" routerLink="/">Favorites</a>
+            <a class="dropdown-item" (click)="doLogout()">Logout</a>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>

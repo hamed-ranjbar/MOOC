@@ -1,1 +1,10 @@
-<app-material-content *ngIf="material" [material]="material" (passed)="materialChanged($event)"></app-material-content>
+<mat-sidenav-container class="h-100">
+  <mat-sidenav #sideNav mode="side" opened class="col-3 d-none d-lg-block h-100">
+    <app-table-of-content *ngIf="tableOfContent" [tableOfContent]="tableOfContent"></app-table-of-content>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="col-12 col-lg-9">
+    <app-material-content *ngIf="material" [material]="material" (passed)="materialChanged($event)">
+    </app-material-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

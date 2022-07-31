@@ -17,11 +17,9 @@ import { HtmlLineBreakPipe } from './html-line-break.pipe';
 import { MaterialDetailModule } from './material-detail/material-detail.module';
 import { CertificateModule } from './certificate/certificate.module';
 
-
 @NgModule({
   declarations: [
     AppComponent
-    
   ],
   imports: [
     BrowserModule,

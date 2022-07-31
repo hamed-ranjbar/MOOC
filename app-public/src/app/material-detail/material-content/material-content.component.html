@@ -1,12 +1,35 @@
 <button type="button" class="btn btn-info" (click)="goPrevious()">Previous</button>
 <span [ngSwitch]="materialType.type_name">
   <div *ngSwitchCase="'text'">
-    <p [innerHtml]="material.material_link | htmlLineBreak"></p>
+    <p [innerHtml]="material.material_content | htmlLineBreak"></p>
   </div>
   <div *ngSwitchCase="'picture'">
-    <img src="assets/{{material.material_link}}.jpg" alt="material picture" style="width: 100%;">
+    <img src="assets/{{material.material_content}}.jpg" alt="material picture" style="width: 100%;">
+  </div>
+  <div *ngSwitchCase="'video'">
+    <video controls style="width: 100%;" (ended)="videoEnded()">
+      <source src="http://localhost:3000/stream/{{material.material_content}}" type="video/mkv">
+      <source src="http://localhost:3000/stream/{{material.material_content}}" type="video/mp4">
+    </video>
+  </div>
+  <div *ngSwitchCase="'quiz'">
+    <label id="example-radio-group-label"><h4>{{label}}:</h4></label>
+    <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" (change)="radioChanged($event)">
+      <mat-radio-button class="example-radio-button" *ngFor="let option of options" [value]="option">
+        {{option}}
+      </mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div *ngSwitchCase="'multi choice'">
+    <section class="example-section">
+      <h4>{{label}}:</h4>
+      <br/>
+      <div *ngFor="let option of options">
+        <mat-checkbox [value]="option" (change)="checkBoxChanged($event,option)">{{option}}</mat-checkbox>
+      </div>
+    </section>
   </div>
 </span>
 
 
-<button type="button" class="btn btn-warning float-end" (click)="goNext()">Next</button>
+<button type="button" class="btn btn-warning float-end align-bottom" (click)="goNext()" [disabled]="!score">Next</button>

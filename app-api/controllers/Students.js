@@ -1,5 +1,7 @@
 const {
-    Student
+    Student,
+    StudentFavoriteProgram,
+    StudentFavoriteCourse
 } = require('../models/db');
 
 ////////////////////////////////
@@ -8,7 +10,6 @@ const {
 //     (API Controllers)      //
 //                            //
 ////////////////////////////////
-
 const studentsList = async (req, res) => {
     const studentList = await Student.findAll();
     if (studentList == null)
@@ -47,10 +48,9 @@ const studentReadOne = async (req, res) => {
 };
 const studentCreateOne = async (req, res) => {
     const studentInstance = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        password: req.body.password
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        email: req.body.email
     };
     let student;
     try {
@@ -61,7 +61,19 @@ const studentCreateOne = async (req, res) => {
         });
         return;
     }
-    res.status(201).json(student);
+    student.setHash(req.body.password);
+    try {
+        student.save()
+    } catch (err) {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+        return;
+    }
+    const token = student.generateJWT();
+    res.status(201).json({
+        token
+    });
 };
 const studentUpdateOne = async (req, res) => {
     const studentId = req.params.id;
@@ -84,8 +96,8 @@ const studentUpdateOne = async (req, res) => {
         });
         return;
     }
-    student.firstName = req.body.firstName;
-    student.lastName = req.body.lastName;
+    student.first_name = req.body.first_name;
+    student.last_name = req.body.last_name;
     student.email = req.body.email;
     student.password = req.body.password;
     try {
@@ -130,10 +142,212 @@ const studentDeleteOne = async (req, res) => {
     res.status(204).json({});
 };
 
+////////////////////////////////
+//                            //
+//      Favorite Course       //
+//     (API Controllers)      //
+//                            //
+////////////////////////////////
+
+const favoriteCourseList = async (req, res) => {
+    const {
+        id
+    } = req.params;
+    StudentFavoriteCourse.findAll({
+        where: {
+            student_id: id
+        }
+    }).then((favoriteList) => {
+        if (!favoriteList.length)
+            res.status(404).json({
+                'message': 'NO FAVORITE COURSE FOUND!'
+            });
+        else
+            res.status(200).json(favoriteList);
+    }).catch(err => {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+    });
+};
+const favoriteCourseReadOne = async (req, res) => {
+    const {
+        student_id,
+        program_id
+    } = req.params;
+    StudentFavoriteCourse.findOne({
+        where: {
+            student_id,
+            program_id
+        }
+    }).then(favoriteCourse => {
+        if (!favoriteCourse)
+            res.status(404).json({
+                'message': 'FAVORITE COURSE NOT FOUND!'
+            });
+        else
+            res.status(200).json(favoriteCourse);
+    }).catch(err => {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+    });
+};
+const favoriteCourseCreateOne = async (req, res) => {
+    const favoriteCourseInstance = {
+        student_id,
+        course_id
+    } = req.body;
+    StudentFavoriteCourse.create(favoriteCourseInstance)
+        .then(newFavoriteCourse => {
+            res.status(201).json(newFavoriteCourse);
+        }).catch(err => {
+            res.status(500).json({
+                'message': 'INTERNAL SERVER ERROR!'
+            });
+        });
+};
+const favoriteCourseDeleteOne = async (req, res) => {
+    const {
+        student_id,
+        program_id
+    } = req.params;
+    StudentFavoriteCourse.findOne({
+        where: {
+            student_id,
+            program_id
+        }
+    }).then(favoriteCourse => {
+        if (!favoriteCourse)
+            res.status(404).json({
+                'message': 'FAVORITE COURSE NOT FOUND!'
+            });
+        else {
+            favoriteCourse.destroy()
+                .then(() => {
+                    res.status(204).json({});
+                }).catch(err => {
+                    res.status(500).json({
+                        'message': 'INTERNAL SERVER ERROR!'
+                    });
+                });
+        }
+    }).catch(err => {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+    });
+};
+
+////////////////////////////////
+//                            //
+//     Favorite Program       //
+//     (API Controllers)      //
+//                            //
+////////////////////////////////
+const favoriteProgramList = async (req, res) => {
+    const {
+        id
+    } = req.params;
+    StudentFavoriteProgram.findAll({
+        where: {
+            student_id: id
+        }
+    }).then((favoriteList) => {
+        if (!favoriteList.length)
+            res.status(404).json({
+                'message': 'NO FAVORITE PROGRAM FOUND!'
+            });
+        else
+            res.status(200).json(favoriteList);
+    }).catch(err => {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+    });
+};
+const favoriteProgramReadOne = async (req, res) => {
+    const {
+        student_id,
+        program_id
+    } = req.params;
+    StudentFavoriteProgram.findOne({
+        where: {
+            student_id,
+            program_id
+        }
+    }).then(favoriteProgram => {
+        if (!favoriteProgram)
+            res.status(404).json({
+                'message': 'FAVORITE PROGRAM NOT FOUND!'
+            });
+        else
+            res.status(200).json(favoriteProgram);
+    }).catch(err => {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+    });
+};
+const favoriteProgramCreateOne = async (req, res) => {
+    const favoriteProgramInstance = {
+        student_id,
+        program_id
+    } = req.body;
+    StudentFavoriteProgram.create(favoriteProgramInstance)
+        .then(newFavoriteProgram => {
+            res.status(201).json(newFavoriteProgram);
+        }).catch(err => {
+            res.status(500).json({
+                'message': 'INTERNAL SERVER ERROR!'
+            });
+        });
+};
+const favoriteProgramDeleteOne = async (req, res) => {
+    console.log('WTF?');
+    const {
+        student_id,
+        program_id
+    } = req.params;
+    StudentFavoriteProgram.findOne({
+        where: {
+            student_id,
+            program_id
+        }
+    }).then(favoriteProgram => {
+        if (!favoriteProgram)
+            res.status(404).json({
+                'message': 'FAVORITE PROGRAM NOT FOUND!'
+            });
+        else {
+            favoriteProgram.destroy()
+                .then(() => {
+                    res.status(204).json({});
+                }).catch(err => {
+                    res.status(500).json({
+                        'message': 'INTERNAL SERVER ERROR!'
+                    });
+                });
+        }
+    }).catch(err => {
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+    });
+};
+
 module.exports = {
     studentsList,
     studentReadOne,
     studentCreateOne,
     studentUpdateOne,
-    studentDeleteOne
+    studentDeleteOne,
+    favoriteCourseList,
+    favoriteCourseReadOne,
+    favoriteCourseCreateOne,
+    favoriteCourseDeleteOne,
+    favoriteProgramList,
+    favoriteProgramReadOne,
+    favoriteProgramCreateOne,
+    favoriteProgramDeleteOne
 };

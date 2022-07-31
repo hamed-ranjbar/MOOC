@@ -11,6 +11,8 @@ import { HtmlLineBreakPipe } from '../html-line-break.pipe';
 import { LecturerInfoComponent } from './lecturer-info/lecturer-info.component';
 import { TableOfContentComponent } from './table-of-content/table-of-content.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MaterialExampleModule } from '../material.module';
+import { CourseCardComponent } from './course-card/course-card.component';
 
 
 @NgModule({
@@ -21,14 +23,16 @@ import { MatStepperModule } from '@angular/material/stepper';
     InstitutionInfoComponent,
     HtmlLineBreakPipe,
     LecturerInfoComponent,
-    TableOfContentComponent
+    TableOfContentComponent,
+    CourseCardComponent
   ],
   imports: [
     CommonModule,
     MatCardModule,
     MatButtonModule,
     RouterModule,
-    MatStepperModule
+    MatStepperModule,
+    MaterialExampleModule
   ],
   exports: [
     FooterComponent,
@@ -37,7 +41,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     InstitutionInfoComponent,
     HtmlLineBreakPipe,
     LecturerInfoComponent,
-    TableOfContentComponent
+    TableOfContentComponent,
+    CourseCardComponent
   ]
 })
 export class SharedModule { }

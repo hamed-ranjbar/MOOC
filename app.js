@@ -4,9 +4,11 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const passport = require('passport');
 
 require('dotenv').config();
 require('./app-api/models/db');
+require('./app-api/config/passport')
 
 const apiRouter = require('./app-api/routes/index');
 const serverRouter = require('./app-server/routes/index');
@@ -24,10 +26,10 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
 
-app.use(cors({
-  origin: '*'
-}));
+app.options('/api', cors());
+app.use('/api', cors());
 
 app.use('/api', apiRouter);
 app.use('/', serverRouter);

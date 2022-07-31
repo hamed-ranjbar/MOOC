@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment';
-import { last, lastValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 import { Program } from './interfaces/program';
 import { Course } from './interfaces/course';
@@ -11,12 +11,12 @@ import { Lecturer } from './interfaces/lecturer';
 import { Institution } from './interfaces/institution';
 import { OnCourse } from './interfaces/on-course';
 import { OnProgram } from './interfaces/on-program';
-import { ProgramCardComponent } from './shared/program-card/program-card.component';
 import { ProgramCreatedBy } from './interfaces/program-created-by';
 import { CourseCreatedBy } from './interfaces/course-created-by';
-import { response } from 'express';
 import { Material } from './interfaces/material';
 import { MaterialType } from './interfaces/material-type';
+import { Student } from './interfaces/student';
+import { Authresponse } from './interfaces/authresponse';
 
 @Injectable({
   providedIn: 'root'
@@ -110,7 +110,7 @@ export class MoocDataService {
   }
 
   public getOnCourse(courseId: string) {
-    const url = `${this.apiBaseURL}/oncouse/course/${courseId}`;
+    const url = `${this.apiBaseURL}/oncourse/course/${courseId}`;
     return lastValueFrom(this.httpClient.get(url))
       .then(response => response as OnCourse[])
       .catch(error => { this.handleError });
@@ -135,6 +135,69 @@ export class MoocDataService {
     return lastValueFrom(this.httpClient.get(url))
       .then(response => response as MaterialType)
       .catch(err => { this.handleError });
+  }
+
+  public addFavoriteProgram(userId: string, programId: string) {
+    const url = `${this.apiBaseURL}/favoriteprogram`;
+    return lastValueFrom(this.httpClient.post(url, { program_id: programId, student_id: userId }))
+      .then(newFavorite => newFavorite)
+      .catch(this.handleError);
+  }
+  public removeFavoriteProgram(userId: string, programId: string) {
+    const url = `${this.apiBaseURL}/favoriteprogram/student/${userId}/program/${programId}`;
+    return lastValueFrom(this.httpClient.delete(url))
+      .catch(this.handleError);
+  }
+  public addFavoriteCourse(userId: string, courseId: string) {
+    const url = `${this.apiBaseURL}/favoritecourse`;
+    return lastValueFrom(this.httpClient.post(url, { course_id: courseId, student_id: userId }))
+      .then(newFavorite => newFavorite)
+      .catch(this.handleError);
+  }
+  public removeFavoriteCourse(userId:string,courseId:string) {
+    const url = `${this.apiBaseURL}/favoritecourse/user/${userId}/course/${courseId}`;
+    return lastValueFrom(this.httpClient.delete(url))
+      .catch(this.handleError);
+  }
+
+  public getFavoriteProgramList(userId: string) {
+    const url = `${this.apiBaseURL}/favoriteprogram/student/${userId}`;
+    return lastValueFrom(this.httpClient.get(url))
+      .then(favorite => favorite as any[])
+      .catch(this.handleError);
+  }
+  public getFavoriteProgram(userId: string,programId:string) {
+    const url = `${this.apiBaseURL}/favoriteprogram/student/${userId}/program/${programId}`;
+    return lastValueFrom(this.httpClient.get(url))
+      .then(favorite => favorite as any)
+      .catch(this.handleError);
+  }
+  public getFavoriteCourseList(userId: string) {
+    const url = `${this.apiBaseURL}/favoritecourse/student/${userId}`;
+    return lastValueFrom(this.httpClient.get(url))
+      .then(favorite => favorite as any[])
+      .catch(this.handleError);
+  }
+  public getFavoriteCourse(userId: string,programId:string) {
+    const url = `${this.apiBaseURL}/favoritecourse/student/${userId}/program/${programId}`;
+    return lastValueFrom(this.httpClient.get(url))
+      .then(favorite => favorite as any)
+      .catch(this.handleError);
+  }
+
+  public login(user: any) {
+    return this.makeAuthApiCall('login', user);
+  }
+
+  public register(user: Student) {
+    return this.makeAuthApiCall('student', user);
+  }
+
+  makeAuthApiCall(urlPath: string, user: Student) {
+    const url = `${this.apiBaseURL}/${urlPath}`;
+    return lastValueFrom(this.httpClient.post(url, user))
+      .then(response => response as Authresponse)
+      .catch(this.handleError);
   }
 
 }

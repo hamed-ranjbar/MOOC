@@ -1,0 +1,68 @@
+<div *ngIf="loginPage">
+  <h3>Login</h3>
+  <p>not a member? <a (click)="loginPage = false">sign up</a></p>
+  <div class="row">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter your email</mat-label>
+      <input matInput placeholder="pat@example.com" [formControl]="formGroup.controls.email" required>
+      <mat-error *ngIf="formGroup.controls.email.invalid">{{getErrorMessage(formGroup.controls.email)}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="row">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter your password</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" [formControl]="formGroup.controls.password" required>
+      <mat-error *ngIf="formGroup.controls.password.invalid">{{getErrorMessage(formGroup.controls.password)}}
+      </mat-error>
+      <button mat-icon-button matSuffix (click)="hide = !hide" placeholder="password"
+        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <button mat-button (click)="tryLogin()">Login</button>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+</div>
+
+<div *ngIf="!loginPage">
+  <h3>Sign up</h3>
+  <p>already a member? <a (click)="loginPage = true">login</a></p>
+  <div class="row">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter your first name</mat-label>
+      <input matInput placeholder="John" [formControl]="formGroup.controls.firstName" required>
+      <mat-error *ngIf="formGroup.controls.firstName.invalid">{{getErrorMessage(formGroup.controls.firstName)}}
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="row">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter your last name</mat-label>
+      <input matInput placeholder="Doe" [formControl]="formGroup.controls.lastName" required>
+      <mat-error *ngIf="formGroup.controls.lastName.invalid">{{getErrorMessage(formGroup.controls.lastName)}}
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter your email</mat-label>
+      <input matInput placeholder="john@example.com" [formControl]="formGroup.controls.email" required>
+      <mat-error *ngIf="formGroup.controls.email.invalid">{{getErrorMessage(formGroup.controls.email)}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="row">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter your password</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" [formControl]="formGroup.controls.password" required>
+      <mat-error *ngIf="formGroup.controls.password.invalid">{{getErrorMessage(formGroup.controls.password)}}
+      </mat-error>
+      <button mat-icon-button matSuffix (click)="hide = !hide" placeholder="password"
+        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <button mat-button (click)="tryRegister()">Signup</button>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+</div>

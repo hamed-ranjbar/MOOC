@@ -10,5 +10,8 @@
   </mat-card-content>
   <mat-card-actions>
     <button routerLink="/program/{{program.id}}" mat-button>View Program</button>
+    <a (click)="toggleFavorite()" *ngIf="isLoggedIn()">
+      <mat-icon aria-label="Example home icon">{{isFavorite?'favorite':'favorite_outline'}}</mat-icon>
+    </a>
   </mat-card-actions>
 </mat-card>
