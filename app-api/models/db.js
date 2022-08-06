@@ -19,7 +19,10 @@ const syncDataBase = async () => {
 
 // Creating a DB instance
 const sequelize = new Sequelize(process.env.DBURI, {
-    logging: false
+    logging: false,
+    ssl: {
+      rejectUnauthorized: false
+    }
 });
 // Connecting instance to DataBase
 try {
