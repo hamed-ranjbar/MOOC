@@ -1,21 +1,19 @@
-<app-page-title [content]="pageContent.header"></app-page-title>
+<div class="container">
+  <app-page-title [content]="pageContent.header"></app-page-title>
 
-<mat-tab-group dynamicHeight color="accent">
-  <mat-tab label="Course(s)">
-    <div class="row">
-      <app-course-card *ngFor="let course of courses" [course]="course"></app-course-card>
-    </div>
-  </mat-tab>
+  <mat-tab-group dynamicHeight color="accent">
+    <mat-tab label="Course(s)">
+      <div class="row">
+        <app-course-card *ngFor="let course of courses" [course]="course" class="col-12 col-lg-4 col-md-6"></app-course-card>
+      </div>
+    </mat-tab>
 
-  <mat-tab label="Institution(s)">
-    <app-institution-info *ngFor="let institute of institutions" [institution]="institute"></app-institution-info>
-  </mat-tab>
+    <mat-tab label="Institution(s)">
+      <app-institution-info *ngFor="let institute of institutions" [institution]="institute"></app-institution-info>
+    </mat-tab>
 
-  <mat-tab label="Lecturer(s)">
-    <app-lecturer-info *ngFor="let lecturer of lecturers" [Lecturer]="lecturer"></app-lecturer-info>
-  </mat-tab>
-</mat-tab-group>
-
-<br />
-<br />
-<br />
+    <mat-tab label="Lecturer(s)">
+      <app-lecturer-info *ngFor="let lecturer of lecturers" [Lecturer]="lecturer"></app-lecturer-info>
+    </mat-tab>
+  </mat-tab-group>
+</div>

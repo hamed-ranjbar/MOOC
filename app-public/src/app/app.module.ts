@@ -13,9 +13,10 @@ import { ContactModule } from './contact/contact.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProgramDetailModule } from './program-detail/program-detail.module';
 import { CourseDetailModule } from './course-detail/course-detail.module';
-import { HtmlLineBreakPipe } from './html-line-break.pipe';
 import { MaterialDetailModule } from './material-detail/material-detail.module';
 import { CertificateModule } from './certificate/certificate.module';
+import { FavoriteModule } from './favorite/favorite.module';
+import { MyCoursesModule } from './my-courses/my-courses.module';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,9 @@ import { CertificateModule } from './certificate/certificate.module';
     ContactModule,
     BrowserAnimationsModule,
     MaterialDetailModule,
-    CertificateModule
+    CertificateModule,
+    FavoriteModule,
+    MyCoursesModule
   ],
   providers: [],
   bootstrap: [AppComponent]

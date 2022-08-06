@@ -150,13 +150,13 @@ router.put('/enrolledprogram/:id',ParticipationCTRL.enrolledProgramUpdateOne);
 router.delete('/enrolledprogram/:id',ParticipationCTRL.enrolledProgramDeleteOne);
 
 // Favorite Course
-router.get('/favoritecourse/student/:id',studentCTRL.favoriteCourseList);
+router.get('/favoritecourses/student/:id',studentCTRL.favoriteCourseList);
 router.get('/favoritecourse/student/:student_id/course/:course_id',studentCTRL.favoriteCourseReadOne);
 router.post('/favoritecourse',studentCTRL.favoriteCourseCreateOne);
 router.delete('/favoritecourse/student/:student_id/course/:course_id',studentCTRL.favoriteCourseDeleteOne);
 
 // Favorite Program
-router.get('/favoriteprogram/student/:id',studentCTRL.favoriteProgramList);
+router.get('/favoriteprograms/student/:id',studentCTRL.favoriteProgramList);
 router.get('/favoriteprogram/student/:student_id/program/:program_id',studentCTRL.favoriteProgramReadOne);
 router.post('/favoriteprogram',studentCTRL.favoriteProgramCreateOne);
 router.delete('/favoriteprogram/student/:student_id/program/:program_id',studentCTRL.favoriteProgramDeleteOne);

@@ -1,27 +1,29 @@
-<app-page-title [content]="pageContent.header"></app-page-title>
+<div class="container">
+  <app-page-title [content]="pageContent.header"></app-page-title>
 
-<div class="border border-warning rounded bg-img">
-  <div class="row">
-    <div class="col-12 col-md-6 transparent">
-      <h3>{{course.name}}</h3>
-      <p>{{course.description}}</p>
-      <p><small>{{course.commitment}}</small></p>
-      <button type="button" class="btn btn-warning" routerLink="/material/{{course.id}}">Enroll</button>
+  <div class="border border-warning rounded bg-img">
+    <div class="row">
+      <div class="col-12 col-md-6 transparent">
+        <h3>{{course.name}}</h3>
+        <p>{{course.description}}</p>
+        <p><small>{{course.commitment}}</small></p>
+        <button type="button" class="btn btn-warning" routerLink="/material/{{course.id}}">Enroll</button>
+      </div>
+      <div class="col"></div>
     </div>
-    <div class="col"></div>
   </div>
+
+  <mat-tab-group dynamicHeight>
+    <mat-tab label="overview requirements">
+      <app-table-of-content [tableOfContent]="tableOfContent"></app-table-of-content>
+    </mat-tab>
+
+    <mat-tab label="Institution(s)">
+      <app-institution-info *ngFor="let institute of institutions" [institution]="institute"></app-institution-info>
+    </mat-tab>
+
+    <mat-tab label="Lecturer(s)">
+      <app-lecturer-info *ngFor="let lecturer of lecturers" [Lecturer]="lecturer"></app-lecturer-info>
+    </mat-tab>
+  </mat-tab-group>
 </div>
-
-<mat-tab-group dynamicHeight>
-  <mat-tab label="overview requirements">
-    <app-table-of-content [tableOfContent]="tableOfContent"></app-table-of-content>
-  </mat-tab>
-
-  <mat-tab label="Institution(s)">
-    <app-institution-info *ngFor="let institute of institutions" [institution]="institute"></app-institution-info>
-  </mat-tab>
-
-  <mat-tab label="Lecturer(s)">
-    <app-lecturer-info *ngFor="let lecturer of lecturers" [Lecturer]="lecturer"></app-lecturer-info>
-  </mat-tab>
-</mat-tab-group>

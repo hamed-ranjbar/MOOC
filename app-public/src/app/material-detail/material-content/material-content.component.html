@@ -13,23 +13,29 @@
     </video>
   </div>
   <div *ngSwitchCase="'quiz'">
-    <label id="example-radio-group-label"><h4>{{label}}:</h4></label>
-    <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" (change)="radioChanged($event)">
+    <label id="example-radio-group-label">
+      <h4>{{label}}:</h4>
+    </label>
+    <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+      (change)="radioChanged($event)">
       <mat-radio-button class="example-radio-button" *ngFor="let option of options" [value]="option">
         {{option}}
       </mat-radio-button>
     </mat-radio-group>
+    <button type="button" class="btn btn-success" (click)="submitAnswer()">Submit</button>
   </div>
   <div *ngSwitchCase="'multi choice'">
     <section class="example-section">
       <h4>{{label}}:</h4>
-      <br/>
+      <br />
       <div *ngFor="let option of options">
         <mat-checkbox [value]="option" (change)="checkBoxChanged($event,option)">{{option}}</mat-checkbox>
       </div>
     </section>
+    <button type="button" class="btn btn-success" (click)="submitAnswer()">Submit</button>
   </div>
 </span>
 
 
-<button type="button" class="btn btn-warning float-end align-bottom" (click)="goNext()" [disabled]="!score">Next</button>
+<button type="button" class="btn btn-warning float-end align-bottom" (click)="goNext()"
+  [disabled]="!score">Next</button>

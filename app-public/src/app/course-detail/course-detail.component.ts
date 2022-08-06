@@ -7,6 +7,7 @@ import { Chapter } from '../interfaces/chapter';
 import { Lecturer } from '../interfaces/lecturer';
 import { Program } from '../interfaces/program';
 import { Institution } from '../interfaces/institution';
+import { AuthenticationService } from '../_services/authentication.service';
 
 @Component({
   selector: 'app-course-detail',
@@ -33,7 +34,11 @@ export class CourseDetailComponent implements OnInit {
     ]
   };
 
-  constructor(private moocDataService: MoocDataService, private route: ActivatedRoute) { }
+  constructor(
+    private moocDataService: MoocDataService, 
+    private auth:AuthenticationService,
+    private route: ActivatedRoute,
+    ) { }
 
   private getCourse(courseId: string) {
     return this.moocDataService.getCourse(courseId)
@@ -110,6 +115,10 @@ export class CourseDetailComponent implements OnInit {
     }
     await this.initiateInstitutionList();
     await this.initiateLecturerList();
+  }
+
+  enrollCourse() {
+    this.moocDataService.enrollCourse(this.auth.getCurrentUser(),this.course);
   }
 
 }

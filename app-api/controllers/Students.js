@@ -1,7 +1,9 @@
 const {
     Student,
     StudentFavoriteProgram,
-    StudentFavoriteCourse
+    StudentFavoriteCourse,
+    Program,
+    Course
 } = require('../models/db');
 
 ////////////////////////////////
@@ -156,7 +158,8 @@ const favoriteCourseList = async (req, res) => {
     StudentFavoriteCourse.findAll({
         where: {
             student_id: id
-        }
+        },
+        include:Course
     }).then((favoriteList) => {
         if (!favoriteList.length)
             res.status(404).json({
@@ -173,12 +176,12 @@ const favoriteCourseList = async (req, res) => {
 const favoriteCourseReadOne = async (req, res) => {
     const {
         student_id,
-        program_id
+        course_id
     } = req.params;
     StudentFavoriteCourse.findOne({
         where: {
             student_id,
-            program_id
+            course_id
         }
     }).then(favoriteCourse => {
         if (!favoriteCourse)
@@ -210,12 +213,12 @@ const favoriteCourseCreateOne = async (req, res) => {
 const favoriteCourseDeleteOne = async (req, res) => {
     const {
         student_id,
-        program_id
+        course_id
     } = req.params;
     StudentFavoriteCourse.findOne({
         where: {
             student_id,
-            program_id
+            course_id
         }
     }).then(favoriteCourse => {
         if (!favoriteCourse)
@@ -252,7 +255,8 @@ const favoriteProgramList = async (req, res) => {
     StudentFavoriteProgram.findAll({
         where: {
             student_id: id
-        }
+        },
+        include:Program
     }).then((favoriteList) => {
         if (!favoriteList.length)
             res.status(404).json({
@@ -304,7 +308,6 @@ const favoriteProgramCreateOne = async (req, res) => {
         });
 };
 const favoriteProgramDeleteOne = async (req, res) => {
-    console.log('WTF?');
     const {
         student_id,
         program_id

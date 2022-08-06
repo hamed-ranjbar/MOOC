@@ -19,26 +19,36 @@ export class CourseCardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.isFavoriteCourse();
   }
 
   toggleFavorite() {
     console.log()
-    if (this.isFavorite)
+    if (this.isFavorite){
       this.moocDataService.removeFavoriteCourse(this.auth.getCurrentUser().id, this.course.id)
-    else
+      .finally(() => {
+        this.isFavoriteCourse();
+      });
+    }else{
       this.moocDataService.addFavoriteCourse(this.auth.getCurrentUser().id, this.course.id)
+      .finally(() => {
+        this.isFavoriteCourse();
+      });
+    }
   }
 
   isLoggedIn() {
     return this.auth.isLoggedIn();
   }
 
-  getFavorite() {
+  isFavoriteCourse() {
+    console.log()
     this.isFavorite = false;
-    this.moocDataService.getFavoriteCourse(this.auth.getCurrentUser().id, this.course.id).then(favorite => {
-      if (favorite)
-        this.isFavorite = true
-    });
+    this.moocDataService.getFavoriteCourse(this.auth.getCurrentUser().id, this.course.id)
+      .then(favorite => {
+        if (favorite)
+          this.isFavorite = true
+      });
   }
 }
 

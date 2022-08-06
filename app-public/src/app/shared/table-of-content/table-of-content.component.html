@@ -1,10 +1,10 @@
-<mat-vertical-stepper [selectedIndex]="2">
-  <mat-step *ngFor="let chapter of tableOfContent.chapters" [completed]="chapter.active?true:false">
-    <ng-template matStepLabel>{{chapter.description}}</ng-template>
-    <mat-vertical-stepper [selectedIndex]="1">
-      <mat-step *ngFor="let part of chapter.parts" [completed]="part.active?true:false">
-        <ng-template matStepLabel>{{part.description}}</ng-template>
-      </mat-step>
-    </mat-vertical-stepper>
-  </mat-step>
-</mat-vertical-stepper>
+<ul>
+  <li *ngFor="let chapter of tableOfContent.chapters; index as i">
+    <a [ngClass]="(i <= chapterNo)?'active':''" href="">{{chapter.description}}</a>
+    <ul>
+      <li *ngFor="let part of chapter.parts;index as j">
+        <a [ngClass]="(i < chapterNo || (i == chapterNo && j <= partNo))?'active':''" href="">{{part.description}}</a>
+      </li>
+    </ul>
+  </li>
+</ul>

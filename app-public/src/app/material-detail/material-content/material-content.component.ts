@@ -1,6 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatRadioChange } from '@angular/material/radio';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { Material } from 'src/app/interfaces/material';
 import { MaterialType } from 'src/app/interfaces/material-type';
@@ -37,6 +38,7 @@ export class MaterialContentComponent implements OnInit, OnChanges {
   options: string[] = [];
   answer: any;
   chosenOptions: any = {};
+
   @Input()
   set material(material: Material) {
     this._material.next(material);
@@ -47,12 +49,16 @@ export class MaterialContentComponent implements OnInit, OnChanges {
 
   @Output() passed = new EventEmitter<number>;
   score = 0;
+  correctAnswer = false;
 
-  constructor(private moocDataService: MoocDataService) { }
+  constructor(
+    private moocDataService: MoocDataService,
+    private _snackBar: MatSnackBar
+    ) { }
   @HostListener('window:scroll', [])
   onScroll() {
     if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight
-      && this.materialType.type_name == 'text' || this.materialType.type_name == 'video') {
+      && this.materialType.type_name == 'text') {
       this.score = this.material.max_point;
     }
   }
@@ -60,6 +66,7 @@ export class MaterialContentComponent implements OnInit, OnChanges {
 
   }
   ngOnChanges(changes: SimpleChanges): void {
+    this.correctAnswer = false;
     this.moocDataService.getMaterialType(this.material.material_type_id)
       .then(response => {
         if (response) {
@@ -107,12 +114,26 @@ export class MaterialContentComponent implements OnInit, OnChanges {
   }
 
   radioChanged(radioState: MatRadioChange) {
-    this.score = (this.answer == radioState.value) ? this.material.max_point : 0;
+    this.correctAnswer = (this.answer == radioState.value);
   }
 
   checkBoxChanged(checkBoxState: MatCheckboxChange, option: string) {
     this.chosenOptions[option] = checkBoxState.checked;
-    this.score = (compareJSON(this.answer, this.chosenOptions, this.options)) ? this.material.max_point : 0;
+    this.correctAnswer = compareJSON(this.answer, this.chosenOptions, this.options);
+  }
+
+  submitAnswer() {
+    if(this.correctAnswer){
+      this.score = this.material.max_point;
+      this._snackBar.open('Correct Answer',undefined,{
+        duration:3000
+      })
+    }else{
+      this.score = 0;
+      this._snackBar.open('incorrect Answer\nComplete the related materials','Go Back',{
+        duration:3000
+      });
+    }
   }
 
   videoEnded() {

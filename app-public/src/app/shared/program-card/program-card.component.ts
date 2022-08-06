@@ -46,11 +46,13 @@ export class ProgramCardComponent implements OnInit {
 
   toggleFavorite() {
     if (this.isFavorite) {
-      this.moocDataService.removeFavoriteProgram(this.auth.getCurrentUser().id, this.program.id).then(() => {
+      this.moocDataService.removeFavoriteProgram(this.auth.getCurrentUser().id, this.program.id)
+      .finally(() => {
         this.isFavoriteProgram();
       });
     } else {
-      this.moocDataService.addFavoriteProgram(this.auth.getCurrentUser().id, this.program.id).finally(() => {
+      this.moocDataService.addFavoriteProgram(this.auth.getCurrentUser().id, this.program.id)
+      .finally(() => {
         this.isFavoriteProgram()
       });
     }

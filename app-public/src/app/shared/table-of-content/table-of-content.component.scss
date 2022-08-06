@@ -1,0 +1,21 @@
+ul {
+  list-style: none;
+}
+
+li {
+  margin-left: 1rem;
+}
+
+a {
+  color: gray;
+  text-decoration: none;
+  padding: .125rem 0;
+}
+
+a.active {
+  color: blue
+}
+
+a:hover {
+    color: black;
+}

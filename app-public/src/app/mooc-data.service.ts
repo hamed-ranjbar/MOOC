@@ -38,7 +38,6 @@ export class MoocDataService {
       .then(resposnse => resposnse as Program[])
       .catch(this.handleError);
   }
-
   public getProgram(id: string) {
     const url = `${this.apiBaseURL}/program/${id}`;
     return lastValueFrom(this.httpClient.get(url))
@@ -52,7 +51,6 @@ export class MoocDataService {
       .then(response => response as Course[])
       .catch(error => { this.handleError });
   }
-
   public getCourse(courseId: string) {
     const url = `${this.apiBaseURL}/course/${courseId}`;
     return lastValueFrom(this.httpClient.get(url))
@@ -73,7 +71,6 @@ export class MoocDataService {
       .then(response => response as Part)
       .catch(error => { this.handleError });
   }
-
   public getPart(partId: string) {
     const url = `${this.apiBaseURL}/part/${partId}`;
     return lastValueFrom(this.httpClient.get(url))
@@ -148,6 +145,7 @@ export class MoocDataService {
     return lastValueFrom(this.httpClient.delete(url))
       .catch(this.handleError);
   }
+
   public addFavoriteCourse(userId: string, courseId: string) {
     const url = `${this.apiBaseURL}/favoritecourse`;
     return lastValueFrom(this.httpClient.post(url, { course_id: courseId, student_id: userId }))
@@ -155,13 +153,13 @@ export class MoocDataService {
       .catch(this.handleError);
   }
   public removeFavoriteCourse(userId:string,courseId:string) {
-    const url = `${this.apiBaseURL}/favoritecourse/user/${userId}/course/${courseId}`;
+    const url = `${this.apiBaseURL}/favoritecourse/student/${userId}/course/${courseId}`;
     return lastValueFrom(this.httpClient.delete(url))
       .catch(this.handleError);
   }
 
   public getFavoriteProgramList(userId: string) {
-    const url = `${this.apiBaseURL}/favoriteprogram/student/${userId}`;
+    const url = `${this.apiBaseURL}/favoriteprograms/student/${userId}`;
     return lastValueFrom(this.httpClient.get(url))
       .then(favorite => favorite as any[])
       .catch(this.handleError);
@@ -172,14 +170,15 @@ export class MoocDataService {
       .then(favorite => favorite as any)
       .catch(this.handleError);
   }
+
   public getFavoriteCourseList(userId: string) {
-    const url = `${this.apiBaseURL}/favoritecourse/student/${userId}`;
+    const url = `${this.apiBaseURL}/favoritecourses/student/${userId}`;
     return lastValueFrom(this.httpClient.get(url))
       .then(favorite => favorite as any[])
       .catch(this.handleError);
   }
-  public getFavoriteCourse(userId: string,programId:string) {
-    const url = `${this.apiBaseURL}/favoritecourse/student/${userId}/program/${programId}`;
+  public getFavoriteCourse(userId: string,courseId:string) {
+    const url = `${this.apiBaseURL}/favoritecourse/student/${userId}/course/${courseId}`;
     return lastValueFrom(this.httpClient.get(url))
       .then(favorite => favorite as any)
       .catch(this.handleError);
@@ -188,16 +187,19 @@ export class MoocDataService {
   public login(user: any) {
     return this.makeAuthApiCall('login', user);
   }
-
   public register(user: Student) {
     return this.makeAuthApiCall('student', user);
   }
 
-  makeAuthApiCall(urlPath: string, user: Student) {
+  private makeAuthApiCall(urlPath: string, user: Student) {
     const url = `${this.apiBaseURL}/${urlPath}`;
     return lastValueFrom(this.httpClient.post(url, user))
       .then(response => response as Authresponse)
       .catch(this.handleError);
   }
 
+  public enrollCourse(user:Student,course:Course) {
+    const url = `${this.apiBaseURL}/enrolledcourse`;
+    this.httpClient.post(url,{})
+  }
 }

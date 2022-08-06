@@ -18,6 +18,9 @@ export class TableOfContentComponent implements OnInit, OnChanges {
     return this._tableOfContent.getValue()
   }
 
+  @Input() chapterNo = 0;
+  @Input() partNo = 0;
+
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes['tableOfContent'].currentValue);
   }
