@@ -22,7 +22,8 @@ const sequelize = new Sequelize(process.env.DBURI, {
     logging: false,
     ssl: {
         require: true,
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
+        requestCert: true
     }
 });
 // Connecting instance to DataBase
