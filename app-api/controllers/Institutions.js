@@ -48,8 +48,9 @@ const institutionReadOne = async (req, res) => {
 };
 const institutionCreateOne = async (req, res) => {
     const instituteInstance = {
-        name: req.body.name
-    };
+        name,
+        description
+    } = req.body;
     let institute;
     try {
         institute = await Institution.create(instituteInstance);
@@ -83,6 +84,7 @@ const institutionUpdateOne = async (req, res) => {
         return;
     }
     institute.name = req.body.name;
+    institute.description = req.body.description;
     try {
         await institute.save()
     } catch (err) {

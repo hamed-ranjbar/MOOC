@@ -1,9 +1,46 @@
-.transparent{
-    background-color: rgba($color: white, $alpha: .5);
-    padding: 20px;
+.bg-img {
+  background-image: linear-gradient(to right, white, purple);
+  background-size: cover;
 }
 
-.bg-img{
-    background-image: url("../../assets/GTTP.jpg");
-    background-size: cover;
+.box{
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+a {
+  cursor: pointer;
+}
+
+.skills-container {
+  padding: 20px;
+}
+
+.instructor-image {
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 100px;
+}
+
+.institution-image {
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 120px;
+}
+
+.instructors-container {
+  padding: 5px;
+}
+
+hr{
+  color: rgba(0, 0, 0,40%);
+}
+
+.thin{
+  font-size: 24px;
+  font-weight: 100;
+}
+
+.sticky-top{
+  z-index: 20;
 }

@@ -1,6 +1,7 @@
-nav{
-    margin-bottom: 20px;
-}
 a:hover{
     cursor: pointer;
+}
+
+.lifted{
+    z-index: 500 !important;
 }

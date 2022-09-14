@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MaterialExampleModule } from '../material.module'
+import { MaterialExampleModule } from '../_helpers/material.module'
 
 import { LoginComponent } from './login/login.component';
 

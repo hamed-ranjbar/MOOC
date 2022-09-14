@@ -5,7 +5,8 @@ const {
     Chapter,
     Part,
     Material,
-    MaterialType
+    MaterialType,
+    Program
 } = require("../models/db");
 
 ////////////////////////////////
@@ -45,8 +46,9 @@ const courseReadOne = async (req, res) => {
                 include: [{
                     model: Part,
                     include: [Material]
-                }]
-            }]
+                }],
+
+            }, Program]
         });
     } catch (err) {
         res.status(500).json({

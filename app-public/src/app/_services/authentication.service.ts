@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Student } from '../interfaces/student';
-import { MoocDataService } from '../mooc-data.service';
+import { MoocDataService } from './mooc-data.service';
 import { BROWSER_STORAGE } from '../storage';
 import { Buffer } from 'buffer';
 

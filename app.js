@@ -33,6 +33,15 @@ app.use('/api', cors());
 
 app.use('/api', apiRouter);
 app.use('/', serverRouter);
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    res
+      .status(401)
+      .json({
+        "message": err.name + ": " + err.message
+      });
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

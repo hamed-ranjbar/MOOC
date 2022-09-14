@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MoocDataService } from '../mooc-data.service';
+import { MoocDataService } from '../_services/mooc-data.service';
 import { AuthenticationService } from '../_services/authentication.service';
 
 @Component({

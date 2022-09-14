@@ -1,11 +1,9 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs';
-import { MoocDataService } from '../mooc-data.service';
+import { MoocDataService } from '../_services/mooc-data.service';
 import { Course } from '../interfaces/course';
-import { Chapter } from '../interfaces/chapter';
 import { Lecturer } from '../interfaces/lecturer';
-import { Program } from '../interfaces/program';
 import { Institution } from '../interfaces/institution';
 import { AuthenticationService } from '../_services/authentication.service';
 
@@ -16,18 +14,14 @@ import { AuthenticationService } from '../_services/authentication.service';
 })
 export class CourseDetailComponent implements OnInit {
 
-  course: Course = {name:'',id:'',description:'',commitment:'',course_price:0,program_id:'',min_grade:0,active:false,chapters:[]};
+  course = {} as Course;
   institutions: Institution[] = [];
   lecturers: Lecturer[] = [];
 
-  pageContent = {
-    header: {
-      title: '',
-      strapLine: ''
-    },
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\n Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\n Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-  };
+  studentIsEnrolled = false;
+  enrolledStrudentsNumber = 0;
 
+  skills = ['first one', 'second two', 'third three', 'forth four'];
   tableOfContent: any = {
     chapters: [
       { parts: [] }
@@ -35,18 +29,17 @@ export class CourseDetailComponent implements OnInit {
   };
 
   constructor(
-    private moocDataService: MoocDataService, 
-    private auth:AuthenticationService,
+    private moocDataService: MoocDataService,
+    private auth: AuthenticationService,
     private route: ActivatedRoute,
-    ) { }
+  ) { }
 
   private getCourse(courseId: string) {
     return this.moocDataService.getCourse(courseId)
-      .then((newCourse) => {
+      .then(async (newCourse) => {
         if (newCourse) {
+          await newCourse.chapters.sort((a, b) => { return a.chapter_no - b.chapter_no; });
           this.course = newCourse;
-          this.pageContent.header.title = this.course.name;
-          this.pageContent.header.strapLine = this.course.description;
         }
       });
   }
@@ -100,13 +93,22 @@ export class CourseDetailComponent implements OnInit {
       }
     });
   }
-  async ngOnInit(): Promise<void> {
+  private isEnrolled() {
+    this.moocDataService.getEnrolledCourses(this.auth.getCurrentUser())
+      .then(response => { this.studentIsEnrolled = true });
+  }
+  private getEnrolledStudentsNumber() {
+    this.moocDataService.getEnrolledCourseCount(this.course)
+      .then(response => {
+        this.enrolledStrudentsNumber = response;
+        console.log(response);
+      });
+  }
+  async ngOnInit() {
     let courseId;
-
     this.route.paramMap.subscribe(ParameterMap => {
       courseId = ParameterMap.get('courseId');
     });
-
     if (courseId) {
       this.getCourse(courseId);
       await this.getChapters(courseId);
@@ -115,10 +117,20 @@ export class CourseDetailComponent implements OnInit {
     }
     await this.initiateInstitutionList();
     await this.initiateLecturerList();
+    await this.getEnrolledStudentsNumber();
+    await this.isEnrolled();
   }
-
+  isLoggedIn() {
+    return this.auth.isLoggedIn();
+  }
   enrollCourse() {
-    this.moocDataService.enrollCourse(this.auth.getCurrentUser(),this.course);
+    this.moocDataService.createEnrolledCourse(this.auth.getCurrentUser(), this.course);
+  }
+  continueToCourse() {
+    console.log('oops')
   }
 
+  scrolToElement(element: HTMLElement) {
+    window.scrollTo({ top: element.offsetTop - 60 });
+  }
 }

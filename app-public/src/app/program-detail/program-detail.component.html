@@ -1,19 +1,180 @@
-<div class="container">
-  <app-page-title [content]="pageContent.header"></app-page-title>
+<div class="bg-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-8 space">
+        <h3>{{program.name}}</h3>
+        <p>{{program.description}}</p>
 
-  <mat-tab-group dynamicHeight color="accent">
-    <mat-tab label="Course(s)">
-      <div class="row">
-        <app-course-card *ngFor="let course of courses" [course]="course" class="col-12 col-lg-4 col-md-6"></app-course-card>
       </div>
-    </mat-tab>
+      <div *ngIf="institutions.length" class="col-12 col-md-4 space">
+        <p>Offered by:</p>
+        <h2>{{institutions[0].name}}</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <button mat-raised-button *ngIf="isLoggedIn()"
+          (click)="scrolToElement(courses)">{{!isEnrolled() ?'Enroll':'Go To Courses'}}</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <p>{{enrolled}} already enrolled</p>
+      </div>
+    </div>
+  </div>
 
-    <mat-tab label="Institution(s)">
-      <app-institution-info *ngFor="let institute of institutions" [institution]="institute"></app-institution-info>
-    </mat-tab>
+</div>
+<div class="scrollNav sticky-top" id="navbar">
+  <div class="container">
+    <a (click)="scrolToElement(about)">About</a>
+    <a (click)="scrolToElement(instructor)">Instructor(s)</a>
+    <a (click)="scrolToElement(courses)">Courses</a>
+    <a (click)="scrolToElement(reviews)">Reviews</a>
+    <a (click)="scrolToElement(enrollement)">Enrollement Options</a>
+    <a (click)="scrolToElement(faq)">FAQ</a>
+  </div>
+</div>
 
-    <mat-tab label="Lecturer(s)">
-      <app-lecturer-info *ngFor="let lecturer of lecturers" [Lecturer]="lecturer"></app-lecturer-info>
-    </mat-tab>
-  </mat-tab-group>
+<div class="container">
+  <div class="box" #about>
+    <h2>
+      About this Course
+    </h2>
+    <p><small><strong>{{enrolled}} recent views</strong></small></p>
+    <p>
+      {{program.description}}
+    </p>
+    <div class="skills-container border rounded">
+      <h5><strong>Skills you will gain</strong></h5>
+      <mat-chip-list>
+        <mat-chip *ngFor="let skill of skills"><b>{{skill}}</b></mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+  <div class="box" #instructor>
+    <h2>
+      Instructors
+    </h2>
+    <div class="row instructors-container">
+      <div class="col-12 col-lg-6" *ngFor="let lecturer of lecturers">
+        <div class="row">
+          <div class="col-12 col-sm-3">
+            <img class="instructor-image" src="assets/{{lecturer.firstName+' '+lecturer.lastName}}.jpg">
+          </div>
+          <div class="col-12 col-sm-9">
+            <h5>{{lecturer.firstName + ' ' + lecturer.lastName}}</h5>
+            <p>
+              {{lecturer.title}}
+              <br />
+              <small>backup univesity of mashhad</small>
+            </p>
+            <p></p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>
+      Offered By
+    </h2>
+    <div class="row">
+      <div class="col-12" *ngFor="let institution of institutions">
+        <div class="row">
+          <div class="col-12 col-sm-2">
+            <img class="institution-image" src="assets/{{institution.name}}.jpg">
+          </div>
+          <div class="col-12 col-sm-10">
+            <h5>{{institution.name}}</h5>
+            <p>
+              {{institution.description}}
+            </p>
+            <p></p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="box" #courses>
+    <div class="d-flex justify-content-center">
+      <h2 class="thin">
+        Courses - Courses you'll learn in this Program
+      </h2>
+    </div>
+    <br>
+    <div class="row" *ngFor="let course of program.courses;index as i">
+      <div class="col-12 col-lg-2 justify-content-center">
+        <p><strong>COURSE</strong></p>
+        <h2>{{i+1}}</h2>
+      </div>
+      <div class="col-12 col-lg-10">
+        <a routerLink="/course/{{course.id}}">
+          <h3>{{course.name}}</h3>
+        </a>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis quisquam commodi libero ipsum corporis
+          iusto esse, facilis praesentium optio est amet porro asperiores. Eos soluta velit, accusamus exercitationem
+          cumque omnis!</p>
+        <hr *ngIf="i < (program.courses.length - 1)" />
+      </div>
+    </div>
+  </div>
+  <div class="box" #reviews>
+    <h2>
+      Header
+    </h2>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+  </div>
+  <div class="box" #enrollement>
+    <h2>
+      Header
+    </h2>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+  </div>
+  <div class="box" #faq>
+    <h2>
+      Header
+    </h2>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique aspernatur ut, voluptatem consequuntur, soluta
+      nisi ipsam maxime eum modi, eligendi error. Minima accusantium animi, amet quod eligendi impedit repellat earum!
+    </p>
+  </div>
 </div>

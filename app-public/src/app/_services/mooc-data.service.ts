@@ -3,20 +3,21 @@ import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment';
 import { lastValueFrom } from 'rxjs';
 
-import { Program } from './interfaces/program';
-import { Course } from './interfaces/course';
-import { Chapter } from './interfaces/chapter';
-import { Part } from './interfaces/part';
-import { Lecturer } from './interfaces/lecturer';
-import { Institution } from './interfaces/institution';
-import { OnCourse } from './interfaces/on-course';
-import { OnProgram } from './interfaces/on-program';
-import { ProgramCreatedBy } from './interfaces/program-created-by';
-import { CourseCreatedBy } from './interfaces/course-created-by';
-import { Material } from './interfaces/material';
-import { MaterialType } from './interfaces/material-type';
-import { Student } from './interfaces/student';
-import { Authresponse } from './interfaces/authresponse';
+import { Program } from '../interfaces/program';
+import { Course } from '../interfaces/course';
+import { Chapter } from '../interfaces/chapter';
+import { Part } from '../interfaces/part';
+import { Lecturer } from '../interfaces/lecturer';
+import { Institution } from '../interfaces/institution';
+import { OnCourse } from '../interfaces/on-course';
+import { OnProgram } from '../interfaces/on-program';
+import { ProgramCreatedBy } from '../interfaces/program-created-by';
+import { CourseCreatedBy } from '../interfaces/course-created-by';
+import { Material } from '../interfaces/material';
+import { MaterialType } from '../interfaces/material-type';
+import { Student } from '../interfaces/student';
+import { Authresponse } from '../interfaces/authresponse';
+import { EnrolledCourse } from '../interfaces/enrolled-course';
 
 @Injectable({
   providedIn: 'root'
@@ -152,7 +153,7 @@ export class MoocDataService {
       .then(newFavorite => newFavorite)
       .catch(this.handleError);
   }
-  public removeFavoriteCourse(userId:string,courseId:string) {
+  public removeFavoriteCourse(userId: string, courseId: string) {
     const url = `${this.apiBaseURL}/favoritecourse/student/${userId}/course/${courseId}`;
     return lastValueFrom(this.httpClient.delete(url))
       .catch(this.handleError);
@@ -164,7 +165,7 @@ export class MoocDataService {
       .then(favorite => favorite as any[])
       .catch(this.handleError);
   }
-  public getFavoriteProgram(userId: string,programId:string) {
+  public getFavoriteProgram(userId: string, programId: string) {
     const url = `${this.apiBaseURL}/favoriteprogram/student/${userId}/program/${programId}`;
     return lastValueFrom(this.httpClient.get(url))
       .then(favorite => favorite as any)
@@ -177,7 +178,7 @@ export class MoocDataService {
       .then(favorite => favorite as any[])
       .catch(this.handleError);
   }
-  public getFavoriteCourse(userId: string,courseId:string) {
+  public getFavoriteCourse(userId: string, courseId: string) {
     const url = `${this.apiBaseURL}/favoritecourse/student/${userId}/course/${courseId}`;
     return lastValueFrom(this.httpClient.get(url))
       .then(favorite => favorite as any)
@@ -198,8 +199,45 @@ export class MoocDataService {
       .catch(this.handleError);
   }
 
-  public enrollCourse(user:Student,course:Course) {
-    const url = `${this.apiBaseURL}/enrolledcourse`;
-    this.httpClient.post(url,{})
+  public createCourseSession(course: Course, duration: number) {
+    const url = `${this.apiBaseURL}/coursesession`;
+    return lastValueFrom(this.httpClient.post(url, {
+      course_id: course.id,
+      start_date: Date.now(),
+      end_date: new Date().setDate(new Date().getDate() + duration)
+    })).then(response => response as any)
+      .catch(this.handleError);
+  }
+
+  public async createEnrolledCourse(user: Student, course: Course) {
+    let url = `${this.apiBaseURL}/enrolledcourse`;
+    let courseEnrollementInstance = {
+      enrollement_date: Date.now(),
+      status_date: Date.now(),
+      final_grade: 0,
+      student_id: user.id,
+      course_session_id: null,
+      course_id: course.id
+    };
+    await this.createCourseSession(course, 7).then((newCourseSession) => {
+      courseEnrollementInstance.course_session_id = newCourseSession.id
+    });
+    return lastValueFrom(this.httpClient.post(url, courseEnrollementInstance))
+      .then(response => response as EnrolledCourse)
+      .catch(this.handleError);
+  }
+
+  public getEnrolledCourses(user: Student) {
+    const url = `${this.apiBaseURL}/enrolledcourses/student/${user.id}`;
+    return lastValueFrom(this.httpClient.get(url))
+      .then(response => response as EnrolledCourse[])
+      .catch(this.handleError);
+  }
+
+  public getEnrolledCourseCount(course: Course) {
+    const url = `${this.apiBaseURL}/enrolledcourse/course/${course.id}/count`;
+    return lastValueFrom(this.httpClient.get(url))
+      .then((response: any) => response.count as number)
+      .catch(this.handleError);
   }
 }

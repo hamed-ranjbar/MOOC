@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Institution } from 'src/app/interfaces/institution';
-import { MoocDataService } from 'src/app/mooc-data.service';
+import { MoocDataService } from 'src/app/_services/mooc-data.service';
 import { AuthenticationService } from 'src/app/_services/authentication.service';
 import { Program } from '../../interfaces/program';
 

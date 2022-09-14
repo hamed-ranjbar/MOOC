@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { MaterialExampleModule } from '../_helpers/material.module';
 
 
 @NgModule({
@@ -18,11 +19,7 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     SharedModule,
     RouterModule,
-    MatTabsModule,
-    MatStepperModule,
-    MatCardModule,
-    MatDividerModule,
-    MatButtonModule
+    MaterialExampleModule
   ],
   exports: [
     ProgramDetailComponent

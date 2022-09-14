@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { Material } from 'src/app/interfaces/material';
 import { MaterialType } from 'src/app/interfaces/material-type';
-import { MoocDataService } from 'src/app/mooc-data.service';
+import { MoocDataService } from 'src/app/_services/mooc-data.service';
 
 let compareJSON = (First: any, Second: any, options: any) => {
   for (let option of options) {

@@ -1,0 +1,36 @@
+<h2>Comment</h2>
+<div class="row">
+  <div class="col">
+    <form [formGroup]="commentFormGroup">
+      <mat-form-field appearance="fill">
+        <mat-label>Subject</mat-label>
+        <input matInput placeholder="Subject" maxlength="45">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="fill-width">
+        <mat-label>Comment text</mat-label>
+        <textarea matInput placeholder="Comment"></textarea>
+      </mat-form-field>
+      <button mat-raised-button (click)="submitComment()">submit</button>
+    </form>
+  </div>
+</div>
+<hr />
+
+<div class="content">
+  <div *ngFor="let comment of comments" class="card">
+    <div class="card-body">
+      <h3>{{comment.subject}}</h3>
+      <sup>{{comment.author}} - {{comment.time.toLocaleString()}}</sup>
+      <p>{{comment.text}}</p>
+      <button mat-raised-button>reply</button>
+      <div *ngFor="let sub_comment of comment.sub_comments" class="card">
+        <div class="card-body">
+          <h3>{{sub_comment.subject}}</h3>
+          <sup>{{sub_comment.author}} - {{sub_comment.time.toLocaleString()}}</sup>
+          <p>{{sub_comment.text}}</p>
+          <button mat-raised-button>reply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

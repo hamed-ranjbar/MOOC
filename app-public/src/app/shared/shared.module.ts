@@ -7,11 +7,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { PageTitleComponent } from './page-title/page-title.component';
 import { InstitutionInfoComponent } from './institution-info/institution-info.component';
-import { HtmlLineBreakPipe } from '../html-line-break.pipe';
+import { HtmlLineBreakPipe } from '../_helpers/html-line-break.pipe';
 import { LecturerInfoComponent } from './lecturer-info/lecturer-info.component';
 import { TableOfContentComponent } from './table-of-content/table-of-content.component';
 import { MatStepperModule } from '@angular/material/stepper';
-import { MaterialExampleModule } from '../material.module';
+import { MaterialExampleModule } from '../_helpers/material.module';
 import { CourseCardComponent } from './course-card/course-card.component';
 
 

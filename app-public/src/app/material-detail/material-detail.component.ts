@@ -3,7 +3,7 @@ import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/mat
 import { ActivatedRoute, Router } from '@angular/router';
 import { Course } from '../interfaces/course';
 import { Material } from '../interfaces/material';
-import { MoocDataService } from '../mooc-data.service';
+import { MoocDataService } from '../_services/mooc-data.service';
 
 @Component({
   selector: 'app-material-detail',

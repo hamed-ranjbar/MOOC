@@ -23,7 +23,9 @@ export class HeaderComponent implements OnInit {
   }
 
   openDialog() {
-    const dialogRef = this.dialog.open(LoginComponent);
+    const dialogRef = this.dialog.open(LoginComponent,{
+      panelClass:'lifted'
+    });
     dialogRef.afterClosed().subscribe(result => {
       this.userLoggedIn = this.authService.isLoggedIn();
     })

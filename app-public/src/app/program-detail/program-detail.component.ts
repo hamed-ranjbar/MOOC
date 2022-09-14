@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-import { MoocDataService } from '../mooc-data.service';
+import { MoocDataService } from '../_services/mooc-data.service';
 import { Program } from '../interfaces/program';
 import { Course } from '../interfaces/course';
 import { Institution } from '../interfaces/institution';
@@ -19,15 +19,8 @@ export class ProgramDetailComponent implements OnInit {
   program!: Program;
   institutions: Institution[] = [];
   lecturers: Lecturer[] = [];
-  courses: Course[] = [];
-
-  pageContent = {
-    header: {
-      title: '',
-      strapLine: ''
-    },
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\n Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\n Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-  };
+  enrolled = Math.floor(Math.random() * 1000 + 1);
+  skills: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -45,23 +38,21 @@ export class ProgramDetailComponent implements OnInit {
     ).subscribe((newProgram) => {
       if (newProgram) {
         this.program = newProgram;
-        this.pageContent.header.title = this.program.name;
-        this.pageContent.header.strapLine = this.program.description;
       }
     });
   }
-  private initiateCourseList() {
-    let id: string;
-    this.route.paramMap.pipe(
-      switchMap((param: ParamMap) => {
-        id = param.get('programId')!.toString();
-        return this.moocDataService.getCourseList(id);
-      })
-    ).subscribe((newCourseList) => {
-      if (newCourseList)
-        this.courses = newCourseList.filter(course => course.program_id == id);
-    });
-  }
+  // private initiateCourseList() {
+  //   let id: string;
+  //   this.route.paramMap.pipe(
+  //     switchMap((param: ParamMap) => {
+  //       id = param.get('programId')!.toString();
+  //       return this.moocDataService.getCourseList(id);
+  //     })
+  //   ).subscribe((newCourseList) => {
+  //     if (newCourseList)
+  //       this.courses = newCourseList.filter(course => course.program_id == id);
+  //   });
+  // }
   private initiateInstitutionList() {
     let id: string;
     this.route.paramMap.pipe(
@@ -100,9 +91,19 @@ export class ProgramDetailComponent implements OnInit {
   }
   ngOnInit(): void {
     this.initiateProgram();
-    this.initiateCourseList();
+    // this.initiateCourseList();
     this.initiateInstitutionList();
     this.initiateLecturerList();
   }
+  isLoggedIn() {
+    return this.auth.isLoggedIn();
+  }
+  isEnrolled() {
+    return true;
+  }
+  enrollProgram() { }
 
+  scrolToElement(element: HTMLElement) {
+    window.scrollTo({ top: element.offsetTop - 60 });
+  }
 }

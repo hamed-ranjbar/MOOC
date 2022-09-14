@@ -4,7 +4,8 @@ const {
     Status,
     CourseSession,
     ProgramSession,
-    EnrolledProgram
+    EnrolledProgram,
+    Course
 } = require('../models/db');
 
 ////////////////////////////////
@@ -155,14 +156,15 @@ const studentResultDeleteOne = async (req, res) => {
 //                            //
 ////////////////////////////////
 
-const courseSessionEnrolledCoursesList = async (req, res) => {
-    const courseSessionId = req.params.id;
+const studentEnrolledCoursesList = async (req, res) => {
+    const studentId = req.params.id;
     let enrolledCourseList;
     try {
         enrolledCourseList = await EnrolledCourse.findAll({
             where: {
-                course_session_id: courseSessionId
-            }
+                student_id: studentId
+            },
+            include: [Course]
         })
     } catch (err) {
         res.status(500).json({
@@ -177,6 +179,27 @@ const courseSessionEnrolledCoursesList = async (req, res) => {
     else
         res.status(200).json(enrolledCourseList);
 };
+
+const enrolledCourseCount = async (req, res) => {
+    const {
+        course_id
+    } = req.params;
+    try {
+        const enrolledCoursesCountNumber = await EnrolledCourse.count({
+            where: {
+                course_id
+            }
+        });
+        res.status(200).json({
+            count: enrolledCoursesCountNumber
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            'message': 'INTERNAL SERVER ERROR!'
+        });
+    }
+}
 const enrolledCourseReadOne = async (req, res) => {
     const enrolledCourseId = req.params.id;
     let enrolledCourse;
@@ -201,14 +224,15 @@ const enrolledCourseReadOne = async (req, res) => {
 };
 const enrolledCourseCreateOne = async (req, res) => {
     const enrolledCourseInstance = {
-        student_id: req.body.student_id,
-        course_session_id: req.body.course_session_id,
-        enrollement_date: req.body.enrollement_date,
-        status_id: req.body.status_id,
-        status_date: req.body.status_date,
-        final_grade: req.body.final_grade,
-        certificate_id: req.body.certificate_id
-    };
+        student_id,
+        course_session_id,
+        enrollement_date,
+        status_id,
+        status_date,
+        final_grade,
+        certificate_id,
+        course_id
+    } = req.body;
     let enrolledCourse;
     try {
         enrolledCourse = await EnrolledCourse.create(enrolledCourseInstance);
@@ -216,6 +240,7 @@ const enrolledCourseCreateOne = async (req, res) => {
         res.status(500).json({
             'message': 'INTERNAL SERVER ERROR!'
         });
+        console.log(err);
         return;
     }
     res.status(201).json(enrolledCourse);
@@ -355,6 +380,7 @@ const courseSessionCreateOne = async (req, res) => {
         res.status(500).json({
             'message': 'INTERNAL SERVER ERROR!'
         });
+        console.log(err);
         return;
     }
     res.status(201).json(courseSession);
@@ -768,7 +794,7 @@ const enrolledProgramUpdateOne = async (req, res) => {
         });
         return;
     }
-    if (!enrolledProgram){
+    if (!enrolledProgram) {
         res.status(404).json({
             'message': 'ENROLLED_PROGRAM NOT FOUND!'
         });
@@ -827,7 +853,8 @@ module.exports = {
     studentResultCreateOne,
     studentResultUpdateOne,
     studentResultDeleteOne,
-    courseSessionEnrolledCoursesList,
+    studentEnrolledCoursesList,
+    enrolledCourseCount,
     enrolledCourseReadOne,
     enrolledCourseCreateOne,
     enrolledCourseUpdateOne,

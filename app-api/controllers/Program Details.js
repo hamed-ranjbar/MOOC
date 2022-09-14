@@ -1,7 +1,8 @@
 const {
     Program,
     On_Program,
-    Program_created_by
+    Program_created_by,
+    Course
 } = require('../models/db');
 
 ////////////////////////////////
@@ -31,7 +32,8 @@ const programReadOne = async (req, res) => {
         program = await Program.findOne({
             where: {
                 id: programId
-            }
+            },
+            include:[Course]
         });
     } catch (err) {
         res.status(500).json({

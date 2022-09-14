@@ -1,0 +1,16 @@
+<div class="card">
+    <div class="card-body">
+      <h3>{{comment.subject}}</h3>
+      <sup>{{comment.author}} - {{comment.time.toLocaleString()}}</sup>
+      <p>{{comment.text}}</p>
+      <button mat-raised-button>reply</button>
+      <div *ngFor="let sub_comment of comment.comments" class="card">
+        <div class="card-body">
+          <h3>{{sub_comment.subject}}</h3>
+          <sup>{{sub_comment.author}} - {{sub_comment.time.toLocaleString()}}</sup>
+          <p>{{sub_comment.text}}</p>
+          <button mat-raised-button>reply</button>
+        </div>
+      </div>
+    </div>
+  </div>

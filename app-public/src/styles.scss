@@ -3,15 +3,17 @@
 
 html,
 body {
-  height: 100%;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
 }
 
 body {
-  margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.mat-step-label.mat-step-label {
-  text-overflow: inherit;
-  white-space: normal;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }

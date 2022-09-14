@@ -2,9 +2,6 @@ const {
     Sequelize,
     Model,
     DataTypes,
-    STRING,
-    UUIDV4,
-    UUID
 } = require('sequelize');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -88,6 +85,9 @@ class Status extends Model {};
 class EnrolledProgram extends Model {};
 class StudentFavoriteCourse extends Model {};
 class StudentFavoriteProgram extends Model {};
+class Quiz extends Model {};
+class Question extends Model {};
+class Comment extends Model {};
 
 ////////////////////////////////
 //                            //
@@ -102,7 +102,8 @@ Institution.init({
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    description: DataTypes.TEXT
 }, {
     // Other model options go here
     sequelize, // We need to pass the connection instance
@@ -235,7 +236,8 @@ Chapter.init({
         defaultValue: DataTypes.UUIDV4
     },
     chapter_no: DataTypes.INTEGER,
-    description: DataTypes.TEXT
+    description: DataTypes.TEXT,
+    name: DataTypes.STRING
 }, {
     sequelize,
     modelName: 'chapter'
@@ -245,10 +247,11 @@ Part.init({
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
-        defaultValue: UUIDV4
+        defaultValue: DataTypes.UUIDV4
     },
     part_no: DataTypes.INTEGER,
-    description: DataTypes.TEXT
+    description: DataTypes.TEXT,
+    name: DataTypes.STRING
 }, {
     sequelize,
     modelName: 'part'
@@ -277,7 +280,7 @@ Material.init({
         primaryKey: true
     },
     material_no: DataTypes.INTEGER,
-    material_content: DataTypes.STRING,
+    material_content: DataTypes.TEXT,
     mandatory: DataTypes.BOOLEAN,
     max_point: DataTypes.INTEGER
 }, {
@@ -375,7 +378,7 @@ EnrolledProgram.init({
 StudentFavoriteCourse.init({
     id: {
         type: DataTypes.UUID,
-        defaultValue: UUIDV4,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     }
 }, {
@@ -386,13 +389,62 @@ StudentFavoriteCourse.init({
 StudentFavoriteProgram.init({
     id: {
         type: DataTypes.UUID,
-        defaultValue: UUIDV4,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     }
 }, {
     sequelize,
     modelName: 'user_favorite_program'
 });
+Question.init({
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
+    },
+    statement: DataTypes.TEXT,
+    options: {
+        type: DataTypes.TEXT,
+        async get() {
+            let result = await this.getDataValue('options').split(',');
+            return result;
+        },
+        set(input) {
+            let newOptions = input.join(',');
+            this.setDataValue('options', newOptions);
+        }
+    },
+    answer: {
+        type: DataTypes.TEXT,
+        async get() {
+            let result = await this.getDataValue('answer').split(',');
+            return result;
+        },
+        set(input) {
+            let newOptions = input.join(',');
+            this.setDataValue('answer', newOptions);
+        }
+    }
+}, {
+    sequelize,
+    modelName: 'question'
+});
+Comment.init({
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
+    },
+    subject: DataTypes.STRING,
+    text: DataTypes.STRING,
+    reply_to: DataTypes.UUID,
+    student_id: DataTypes.STRING,
+    comment_on: DataTypes.UUID
+}, {
+    sequelize,
+    modelName: 'comment'
+});
+
 ////////////////////////////////
 //                            //
 //      Model Relations       //
@@ -647,32 +699,46 @@ EnrolledCourse.hasMany(StudentResults, {
 });
 
 // Enrolled Course Relations
-EnrolledCourse.belongsTo(CourseSession, {
+EnrolledCourse.belongsTo(Course, {
     foreignKey: {
-        name: 'course-session_id',
+        name: 'course_id',
         type: DataTypes.UUID,
         allowNull: false
     }
 });
-CourseSession.hasMany(EnrolledCourse, {
+Course.hasMany(EnrolledCourse, {
     foreignKey: {
-        name: 'course-session_id',
+        name: 'course_id',
         type: DataTypes.UUID,
         allowNull: false
+    }
+});
+EnrolledCourse.belongsTo(CourseSession, {
+    foreignKey: {
+        name: 'course_session_id',
+        type: DataTypes.UUID,
+        allowNull: true
+    }
+});
+CourseSession.hasMany(EnrolledCourse, {
+    foreignKey: {
+        name: 'course_session_id',
+        type: DataTypes.UUID,
+        allowNull: true
     }
 });
 EnrolledCourse.belongsTo(Status, {
     foreignKey: {
         name: 'status_id',
         type: DataTypes.UUID,
-        allowNull: false
+        allowNull: true
     }
 });
 Status.hasMany(EnrolledCourse, {
     foreignKey: {
         name: 'status_id',
         type: DataTypes.UUID,
-        allowNull: false
+        allowNull: true
     }
 });
 EnrolledCourse.belongsTo(Student, {
@@ -709,14 +775,14 @@ CourseSession.belongsTo(ProgramSession, {
     foreignKey: {
         name: 'program_session_id',
         type: DataTypes.UUID,
-        allowNull: false
+        allowNull: true
     }
 });
 ProgramSession.hasMany(CourseSession, {
     foreignKey: {
         name: 'program_session_id',
         type: DataTypes.UUID,
-        allowNull: false
+        allowNull: true
     }
 });
 
@@ -840,6 +906,14 @@ Student.hasMany(StudentFavoriteProgram, {
     }
 });
 
+// Quiz Relations
+Question.hasMany(Material, {
+    foreignKey: {
+        name: 'material_id',
+        type: DataTypes.UUID,
+    }
+});
+
 syncDataBase();
 
 module.exports = {
@@ -863,5 +937,6 @@ module.exports = {
     Status,
     EnrolledProgram,
     StudentFavoriteCourse,
-    StudentFavoriteProgram
+    StudentFavoriteProgram,
+    Comment
 }

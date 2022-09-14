@@ -1,3 +1,6 @@
 <div class="container">
-  <p>my-courses works!</p>
+  <div class="content">
+    <app-course-card *ngFor="let enrolledCourse of enrolledCourses" [course]="enrolledCourse.course"
+      [progressValue]="enrolledCourse.final_grade"></app-course-card>
+  </div>
 </div>

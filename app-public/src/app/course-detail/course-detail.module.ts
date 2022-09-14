@@ -3,10 +3,8 @@ import { CommonModule } from '@angular/common';
 import { CourseDetailComponent } from './course-detail.component';
 import { SharedModule } from '../shared/shared.module';
 import { RouterModule } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MaterialExampleModule } from '../_helpers/material.module';
+import { CommentModule } from '../comment/comment.module';
 
 @NgModule({
   declarations: [
@@ -16,10 +14,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     CommonModule,
     SharedModule,
     RouterModule,
-    MatTabsModule,
-    MatCardModule,
-    MatDividerModule,
-    MatButtonModule
+    CommentModule,
+    MaterialExampleModule
   ],
   exports: [
     CourseDetailComponent
