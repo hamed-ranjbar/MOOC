@@ -25,7 +25,7 @@ import { Comment } from '../interfaces/comment';
 })
 export class MoocDataService {
 
-  apiBaseURL = (environment.production) ? 'http://localhost:3000/api' : 'http://localhost:3000/api';
+  apiBaseURL = (environment.production) ? 'http://94.101.184.236:3000/api' : 'http://localhost:3000/api';
 
   constructor(private httpClient: HttpClient) { }
 
