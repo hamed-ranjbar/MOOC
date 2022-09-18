@@ -164,10 +164,11 @@ router.post('/favoriteprogram', studentCTRL.favoriteProgramCreateOne);
 router.delete('/favoriteprogram/student/:student_id/program/:program_id', studentCTRL.favoriteProgramDeleteOne);
 
 // Comment
-router.get('comment/comment_on/:id', commentCTRL.commentList);
-router.get('comment/:id', commentCTRL.commentReadOne);
-router.post('comment', commentCTRL.commentCreateOne);
-router.delete('comment/:id', commentCTRL.commentDeleteOne);
+router.get('/comments/:id', commentCTRL.commentList);
+router.get('/comments/reply/:id', commentCTRL.commentReplyList);
+router.get('/comment/:id', commentCTRL.commentReadOne);
+router.post('/comment', commentCTRL.commentCreateOne);
+router.delete('/comment/:id', commentCTRL.commentDeleteOne);
 
 // Auth
 router.post('/login', AuthCTRL.login)

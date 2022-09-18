@@ -435,10 +435,8 @@ Comment.init({
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
-    subject: DataTypes.STRING,
     text: DataTypes.STRING,
     reply_to: DataTypes.UUID,
-    student_id: DataTypes.STRING,
     comment_on: DataTypes.UUID
 }, {
     sequelize,
@@ -911,6 +909,20 @@ Question.hasMany(Material, {
     foreignKey: {
         name: 'material_id',
         type: DataTypes.UUID,
+    }
+});
+
+// Comment Relations
+Comment.belongsTo(Student, {
+    foreignKey: {
+        name: 'student_id',
+        type: DataTypes.UUID
+    }
+});
+Comment.hasMany(Comment, {
+    foreignKey: {
+        name: 'reply_to',
+        type: DataTypes.UUID
     }
 });
 

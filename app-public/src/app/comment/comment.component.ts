@@ -1,38 +1,56 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Comment } from '../interfaces/comment';
+import { AuthenticationService } from '../_services/authentication.service';
+import { MoocDataService } from '../_services/mooc-data.service';
 
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']
 })
-export class CommentComponent implements OnInit {
+export class CommentComponent implements OnInit, OnChanges {
 
-  commentFormGroup = new FormGroup({
-    subject: new FormControl('', [Validators.maxLength(50), Validators.required]),
-    text: new FormControl('', Validators.required)
-  });
+  private _comment_on: string = '';
+  @Input()
+  get comment_on() {
+    return this._comment_on;
+  }
+  set comment_on(value) {
+    this._comment_on = value;
+  }
 
-  comments = [{
-    id:'1',
-    author: 'hamed',
-    subject: 'sample',
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    reply_to:'',
-    time: new Date,
-    sub_comments:[{
-      id:'2',
-      author: 'saeed',
-      subject: 'reply to sample',
-      text: '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      reply_to:'1',
-      time: new Date
-    }]
-  }];
-  constructor() { }
+  textController = new FormControl('', Validators.required)
+
+  comments: Comment[] = [];
+  constructor(
+    private moocDataService: MoocDataService,
+    private auth: AuthenticationService
+  ) { }
 
   ngOnInit(): void {
   }
 
-  submitComment() { }
+  async ngOnChanges(changes: SimpleChanges) {
+    if (this.comment_on)
+      await this.readComments();
+  }
+
+  readComments() {
+    this.moocDataService.getCommentsList(this.comment_on)
+      .then(result => {
+        this.comments = result;
+      });
+  }
+  submitComment() {
+    if (this.textController.errors)
+      return;
+    const newComment = {
+      comment_on: this.comment_on,
+      text: this.textController.value,
+      student_id: this.auth.getCurrentUser().id
+    };
+    this.moocDataService.createComment(newComment as Comment)
+      .then(createdComment => { this.comments.push(createdComment) });
+  }
 }

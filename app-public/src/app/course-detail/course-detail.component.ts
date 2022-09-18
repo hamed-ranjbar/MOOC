@@ -94,14 +94,14 @@ export class CourseDetailComponent implements OnInit {
     });
   }
   private isEnrolled() {
-    this.moocDataService.getEnrolledCourses(this.auth.getCurrentUser())
-      .then(response => { this.studentIsEnrolled = true });
+    if (this.auth.isLoggedIn())
+      this.moocDataService.getEnrolledCourses(this.auth.getCurrentUser())
+        .then(response => { this.studentIsEnrolled = true });
   }
   private getEnrolledStudentsNumber() {
     this.moocDataService.getEnrolledCourseCount(this.course)
       .then(response => {
         this.enrolledStrudentsNumber = response;
-        console.log(response);
       });
   }
   async ngOnInit() {
@@ -127,7 +127,6 @@ export class CourseDetailComponent implements OnInit {
     this.moocDataService.createEnrolledCourse(this.auth.getCurrentUser(), this.course);
   }
   continueToCourse() {
-    console.log('oops')
   }
 
   scrolToElement(element: HTMLElement) {

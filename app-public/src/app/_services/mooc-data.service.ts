@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment';
-import { lastValueFrom } from 'rxjs';
+import { last, lastValueFrom } from 'rxjs';
 
 import { Program } from '../interfaces/program';
 import { Course } from '../interfaces/course';
@@ -18,6 +18,7 @@ import { MaterialType } from '../interfaces/material-type';
 import { Student } from '../interfaces/student';
 import { Authresponse } from '../interfaces/authresponse';
 import { EnrolledCourse } from '../interfaces/enrolled-course';
+import { Comment } from '../interfaces/comment';
 
 @Injectable({
   providedIn: 'root'
@@ -238,6 +239,25 @@ export class MoocDataService {
     const url = `${this.apiBaseURL}/enrolledcourse/course/${course.id}/count`;
     return lastValueFrom(this.httpClient.get(url))
       .then((response: any) => response.count as number)
+      .catch(this.handleError);
+  }
+
+  public getCommentsList(comment_on: string) {
+    const url = `${this.apiBaseURL}/comments/${comment_on}`;
+    return lastValueFrom(this.httpClient.get(url))
+      .then(result => result as Comment[])
+      .catch(this.handleError);
+  }
+  public getCommentsReply(reply_to: string) {
+    const url = `${this.apiBaseURL}/comments/reply/${reply_to}`;
+    return lastValueFrom(this.httpClient.get(url))
+      .then(result => result as Comment[])
+      .catch(this.handleError);
+  }
+  public createComment(comment: Comment) {
+    const url = `${this.apiBaseURL}/comment`;
+    return lastValueFrom(this.httpClient.post(url, comment))
+      .then(result => result as Comment)
       .catch(this.handleError);
   }
 }

@@ -201,7 +201,6 @@ const courseOnCourseList = async (req, res) => {
         });
     else
         res.status(200).json(onCourse);
-    console.log(onCourse + '\n\n');
 };
 const onCourseCreateOne = async (req, res) => {
     const onCourseInstance = {

@@ -1,5 +1,6 @@
 const {
-    Comment
+    Comment,
+    Student
 } = require('../models/db')
 
 const handleError = (err) => {
@@ -13,13 +14,42 @@ const commentList = (req, res) => {
         where: {
             comment_on: id
         },
-        include: [Comment]
+        include: [{
+            model: Comment
+        }, {
+            model: Student,
+            attributes: ['id', 'first_name', 'last_name', 'email']
+        }]
+    }).then((comments) => {
+        if (comments.length) {
+            res.status(200).json(comments);
+            console.log('ljbaoijoasfd');
+        } else
+            res.status(404).json({
+                'message': 'NO COMMENTS FOUND!'
+            });
+    }).catch(handleError);
+};
+const commentReplyList = (req, res) => {
+    const {
+        id
+    } = req.params;
+    Comment.findAll({
+        where: {
+            reply_to: id
+        },
+        include: [{
+            model: Student,
+            attributes: ['id', 'first_name', 'last_name', 'email']
+        }, {
+            model: Comment
+        }]
     }).then((comments) => {
         if (comments.length)
             res.status(200).json(comments);
         else
             res.status(404).json({
-                'message': 'NO COMMENTS FOUND!'
+                'message': 'NO COMMENT FOUND!'
             });
     }).catch(handleError);
 };
@@ -30,7 +60,13 @@ const commentReadOne = (req, res) => {
     Comment.findAll({
         where: {
             id
-        }
+        },
+        include: [{
+            model: Student,
+            attributes: ['id', 'first_name', 'last_name', 'email']
+        }, {
+            model: Comment
+        }]
     }).then((comment) => {
         if (comment)
             res.status(200).json(comment);
@@ -43,17 +79,14 @@ const commentReadOne = (req, res) => {
 };
 const commentCreateOne = (req, res) => {
     const commentInstance = {
-        subject,
         text,
         reply_to,
         student_id
     } = req.body;
-    Object.values(commentInstance).every(value => {
-        if (value === null)
-            return res.status(503).json({
-                'message': 'INVALID REQUEST!'
-            });
-    });
+    Comment.create(commentInstance, {
+            include: [Comment, Student]
+        }).then(newComment => res.status(201).json(newComment))
+        .catch(handleError);
 };
 const commentDeleteOne = (req, res) => {
     const {
@@ -77,6 +110,7 @@ const commentDeleteOne = (req, res) => {
 
 module.exports = {
     commentList,
+    commentReplyList,
     commentReadOne,
     commentCreateOne,
     commentDeleteOne
